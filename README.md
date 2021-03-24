@@ -17,6 +17,9 @@ From merchant’s WordPress admin
 3. Click on Install Now
 4. Click on Activate
 
+## Screenshots
+<img src="screenshot1.png" />
+<img src="screenshot2.png" />
 
 ## Usage
 
