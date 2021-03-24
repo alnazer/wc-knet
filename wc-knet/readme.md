@@ -28,6 +28,9 @@ From merchant’s WordPress admin
 4. Click on Activate
 
 
+## Screenshots
+<img src="screenshot1.png" />
+<img src="screenshot2.png" />
 ## Usage
 
 go to woocommerce setting in side menu and select tab payment and active knet v2 from list
