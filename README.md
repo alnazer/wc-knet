@@ -18,6 +18,7 @@ From merchant’s WordPress admin
 4. Click on Activate
 
 ## Screenshots
+<img src="screenshot4.png" />
 <img src="screenshot1.png" />
 <img src="screenshot2.png" />
 <img src="screenshot3.png" />
