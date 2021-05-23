@@ -64,14 +64,14 @@
                 add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
                 // add routers
-                add_action('init', [$this,'wc_knet_rewrite_tag_rule'], 10, 0);
+                //add_action('init', [$this,'wc_knet_rewrite_tag_rule'], 10, 0);
             }
             /**
              * define knet route like knetresponce/success
-             */
+             
             public function wc_knet_rewrite_tag_rule() {
                 add_rewrite_rule( '^knetresponce/([^/]*)/?', 'index.php?knetresponce=$matches[1]','top' );
-            }
+            }*/
             /**
              * initialization gateway call default data
              * like id,icon 
@@ -232,8 +232,8 @@
                     $this->email = $user_info->user_email;
                     $this->mobile = $user_info->user_phone;
                 }
-                $this->errorURL = get_site_url()."/knetresponce/success/";
-                $this->responseURL = get_site_url()."/knetresponce/success/";
+                $this->errorURL = get_site_url()."?knetresponce=success";
+                $this->responseURL = get_site_url()."?knetresponce=success";
 
                 $this->trackId = time().mt_rand(1000,100000);
                 $replace_array = array();
