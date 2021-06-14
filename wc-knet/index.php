@@ -232,8 +232,8 @@
                     $this->email = $user_info->user_email;
                     $this->mobile = $user_info->user_phone;
                 }
-                $this->errorURL = get_site_url()."?knetresponce=success";
-                $this->responseURL = get_site_url()."?knetresponce=success";
+                $this->errorURL = get_site_url()."/index.php?knetresponce=success";
+                $this->responseURL = get_site_url()."/index.php?knetresponce=success";
 
                 $this->trackId = time().mt_rand(1000,100000);
                 $replace_array = array();
