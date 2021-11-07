@@ -54,7 +54,7 @@ function fun_wc_knet_create_new_transation($order,$transation_data){
                     'result' => $transation_data["result"],
                     'amount'=>$transation_data["amount"],
                     'info' => json_encode($transation_data),
-                    'created_at' => date("Y-m-d H:i:s"),
+                    'created_at' => current_time( 'mysql' ),
                 ]
             );
         }
