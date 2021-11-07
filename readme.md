@@ -37,6 +37,10 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 ## Changelog
 
 == Changelog ==
+= 2.1.0 =
+* add knet details email html&text templates
+* add knet payment date
+* display knet details in email
 
 = 2.0.0 =
 * add knet transations list for order
