@@ -105,7 +105,12 @@ define("STATUS_NEW","new");
                 if(!$knet_details){
                     return;
                 }
-                $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
+                if($text_plan){
+                    $output = $this->format_email($order,$knet_details,"emails/knet-text-details.html");
+                }else{
+                    $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
+                }
+
                 echo $output;
             }
 
