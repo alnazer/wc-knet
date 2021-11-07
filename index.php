@@ -110,7 +110,6 @@ define("STATUS_NEW","new");
                 }else{
                     $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
                 }
-
                 echo $output;
             }
 
@@ -742,7 +741,7 @@ define("STATUS_NEW","new");
          </div>';
         }
     }
-add_action( 'woocommerce_before_email_order', 'add_order_instruction_email', 10, 2 );
+
 
 
 ?>
