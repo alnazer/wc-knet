@@ -101,7 +101,6 @@ define("STATUS_NEW","new");
             }
             public function wc_knet_email_details($order,$is_admin,$text_plan){
                 $knet_details = wc_get_transation_by_orderid($order->get_id());
-
                 if(!$knet_details){
                     return;
                 }
@@ -124,6 +123,7 @@ define("STATUS_NEW","new");
                     "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
                     "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
                     "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
+                    "{created_at}" => ($knet_detials->created_at) ? $knet_detials->created_at : "---",
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace_lang = [
@@ -133,6 +133,7 @@ define("STATUS_NEW","new");
                     "_lang(track_id)" => __("Tracking id","wc_knet"),
                     "_lang(amount)" => __("Amount","wc_knet"),
                     "_lang(ref_id)" => __("Refrance id","wc_knet"),
+                    "_lang(created_at)" => __('Created at', "wc_knet"),
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace = array_merge($replace, $replace_lang);
@@ -429,7 +430,8 @@ define("STATUS_NEW","new");
                     }
                     elseif(isset($status) && $status == "success")
                     {
-                            
+                            // insert transation
+                            do_action("wc_knet_create_new_transation",$order,$transation_data);
                             switch ($result) {
                                 case 'CAPTURED':
                                     $order->payment_complete();
@@ -445,7 +447,6 @@ define("STATUS_NEW","new");
                                     $order->update_status('refunded');
                                     break;
                             }
-                            
                             $knetInfomation = "";
                             $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
                             $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
@@ -453,11 +454,12 @@ define("STATUS_NEW","new");
                             $knetInfomation.= __('Transaction id', 'wc_knet')."   : $tranid\n";
                             $knetInfomation.= __('Refrance id', 'wc_knet')."      : $ref\n";
                             $order->add_order_note($knetInfomation);
-                            // insert transation
-                            do_action("wc_knet_create_new_transation",$order,$transation_data);
+
                     }
                     elseif(isset($status) && $status == "error")
                     {
+                            // insert transation
+                            do_action("wc_knet_create_new_transation",$order,$transation_data);
                             $knetInfomation = "";
                             $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
                             $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
@@ -469,8 +471,7 @@ define("STATUS_NEW","new");
                             $order->add_order_note($knetInfomation);
                             $order->update_status('refunded');
 
-                            // insert transation
-                            do_action("wc_knet_create_new_transation",$order,$transation_data);
+
                     }
                 }
                 return $this->get_return_url($order);
