@@ -4,7 +4,7 @@
 *Plugin URI: https://github.com/alnazer/woocommerce-payment-kent-v2
 *Description: The new update of the K-Net payment gateway via woocommerce paymemt.
 *Author: Hassan hassanaliksa@gmail.com +96590033807
-*Version: 2.0.0
+*Version: 2.1.0
 *Author URI: https://github.com/alnazer
 *Text Domain: wc_knet
 * Domain Path: /languages
