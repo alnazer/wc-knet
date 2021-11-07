@@ -51,10 +51,14 @@ define("STATUS_NEW","new");
             private $name = "";
             private $email = "";
             private $mobile = "";
-            private $user_id = "";
             private $trackId;
             private $responseURL;
             private $errorURL;
+            public $is_test;
+            /**
+             * @var string
+             */
+
 
             function __construct()
             {
@@ -62,7 +66,6 @@ define("STATUS_NEW","new");
                 $this->init_gateway();
                 $this->init_form_fields();
                 $this->init_settings();
-
                 $this->title = $this->get_option('title');
                 $this->description = $this->get_option('description');
                 $this->tranportal_id = $this->get_option('tranportal_id');
@@ -77,13 +80,64 @@ define("STATUS_NEW","new");
 	            add_filter('woocommerce_thankyou_order_received_text', [$this,'wc_woo_change_order_received_text'] );
 	            add_filter( 'woocommerce_endpoint_order-received_title', [$this,'wc_thank_you_title']);
 
+                // add details to tahnkyou page
+	            add_action("woocommerce_order_details_before_order_table", [$this,'wc_knet_details'],10,1);
+	            // add details to email
+                add_action("woocommerce_email_after_order_table", [$this,'wc_knet_email_details'],10,3);
+
                 // add routers
                 //add_action('init', [$this,'wc_knet_rewrite_tag_rule'], 10, 0);
             }
 
+            public function wc_knet_details($order){
+                $knet_details = wc_get_transation_by_orderid($order->get_id());
+
+                if(!$knet_details){
+                    return;
+                }
+                $output = $this->format_email($order,$knet_details,"knet-details.html");
+                echo $output;
+
+            }
+            public function wc_knet_email_details($order,$is_admin,$text_plan){
+                $knet_details = wc_get_transation_by_orderid($order->get_id());
+
+                if(!$knet_details){
+                    return;
+                }
+                $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
+                echo $output;
+            }
+
+            private function format_email($order,$knet_detials,$template="knet-details.html")
+            {
+                $template = file_get_contents(plugin_dir_path(__FILE__).$template);
+                $replace = [
+                    "{icon}"=> plugin_dir_url(__FILE__)."assets/knet-logo.png",
+                    "{title}" => __("Knet details","wc_knet"),
+                    "{payment_id}" => ($knet_detials->payment_id) ? $knet_detials->payment_id : "---",
+                    "{track_id}" => ($knet_detials->track_id) ? $knet_detials->track_id : "---",
+                    "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
+                    "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
+                    "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                ];
+                $replace_lang = [
+                    "_lang(result)" => __("Result","wc_knet"),
+                    "_lang(payment_id)" => __("Payment id","wc_knet"),
+                    "_lang(trnac_id)" => __("Transaction id","wc_knet"),
+                    "_lang(track_id)" => __("Tracking id","wc_knet"),
+                    "_lang(amount)" => __("Amount","wc_knet"),
+                    "_lang(ref_id)" => __("Refrance id","wc_knet"),
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                ];
+                $replace = array_merge($replace, $replace_lang);
+                return str_replace(array_keys($replace), array_values($replace), $template);
+            }
             public function wc_woo_change_order_received_text($str) {
 	            global  $id;
-	            $order_status = $this->get_order_in_recived_page($id);
+	            $order = $this->get_order_in_recived_page($id,true);
+                $order_status = $order->get_status();
 	            return  sprintf("%s <b><span style=\"color:%s\">%s</span></b>.",__("Thank you. Your order has been","wc_knet"),$this->get_status_color($order_status),__(ucfirst($order_status),"woocommerce"));
             }
 
@@ -97,7 +151,7 @@ define("STATUS_NEW","new");
 		        return $old_title;
 	        }
 
-	        private function get_order_in_recived_page($page_id){
+	        private function get_order_in_recived_page($page_id,$return_order= false){
 		        global $wp;
 		        if ( is_order_received_page() && get_the_ID() === $page_id ) {
 			        $order_id  = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
@@ -108,6 +162,9 @@ define("STATUS_NEW","new");
 				        if ( $order->get_order_key() != $order_key ) {
 					        $order = false;
 				        }
+				        if($return_order){
+                            return $order;
+                        }
 				        return $order->get_status();
 			        }
 		        }
@@ -220,8 +277,9 @@ define("STATUS_NEW","new");
                 echo '</table>';
 
             }
+
             /**
-             * Process payment 
+             * Process payment
              * return array
              * status,pay url
              * 1- get request data (pay url)
@@ -229,6 +287,8 @@ define("STATUS_NEW","new");
              * 3- Remove cart
              * 4- Return thankyou redirect
              * 5- or failed pay
+             * @param $order_id
+             * @return array
              */
             function process_payment( $order_id )
             {
@@ -270,10 +330,12 @@ define("STATUS_NEW","new");
                     );
                 }
             }
- 
+
             /**
              * return pay url to rediredt to knet gateway web site
              * return array
+             * @param $order
+             * @return array
              */
             public function request($order)
             {
@@ -286,14 +348,16 @@ define("STATUS_NEW","new");
                         'payment_id' => $this->trackId
                     ];
             }
+
             /**
              * prepare pay url parames to kent
              * this update pay url var
+             * @param $order
              */
             private function formatUrlParames($order)
             {
-                $this->user_id = $order->get_user_id();
-                if($this->user_id)
+                $user_id = $order->get_user_id();
+                if($user_id)
                 {
                     $user_info = $order->get_user();
                     $this->name = $user_info->user_login;
@@ -353,6 +417,7 @@ define("STATUS_NEW","new");
                         "data" => $resnopseData["data"],
                         'error'=>$ErrorText,
                     ];
+
                     if(!$order->get_id())
                     {
                         wc_add_notice( __("Order not found", "wc_knet"), 'error' );
@@ -368,7 +433,7 @@ define("STATUS_NEW","new");
                                     break;
                                 case 'NOT CAPTURED':
                                     $order->update_status('refunded');
-                                    break;  
+                                    break;
                                 case 'CANCELED':
                                     $order->update_status('cancelled');
                                     break;                     
@@ -378,11 +443,11 @@ define("STATUS_NEW","new");
                             }
                             
                             $knetInfomation = "";
-                            $knetInfomation.= __('Result', 'woothemes')."           : $result\n";
-                            $knetInfomation.= __('Payment id', 'woothemes')."       : $paymentid\n";
-                            $knetInfomation.= __('track id', 'woothemes')."         : $trackid\n";
-                            $knetInfomation.= __('Transaction id', 'woothemes')."   : $tranid\n";
-                            $knetInfomation.= __('Refrance id', 'woothemes')."      : $ref\n";
+                            $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
+                            $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
+                            $knetInfomation.= __('track id', 'wc_knet')."         : $trackid\n";
+                            $knetInfomation.= __('Transaction id', 'wc_knet')."   : $tranid\n";
+                            $knetInfomation.= __('Refrance id', 'wc_knet')."      : $ref\n";
                             $order->add_order_note($knetInfomation);
                             // insert transation
                             do_action("wc_knet_create_new_transation",$order,$transation_data);
@@ -390,13 +455,13 @@ define("STATUS_NEW","new");
                     elseif(isset($status) && $status == "error")
                     {
                             $knetInfomation = "";
-                            $knetInfomation.= __('Result', 'woothemes')."           : $result\n";
-                            $knetInfomation.= __('Payment id', 'woothemes')."       : $paymentid\n";
-                            $knetInfomation.= __('track id', 'woothemes')."         : $trackid\n";
-                            $knetInfomation.= __('Transaction id', 'woothemes')."   : $tranid\n";
-                            $knetInfomation.= __('Refrance id', 'woothemes')."      : $ref\n";
-                            $knetInfomation.= __('Error', 'woothemes')."            : $Error\n";
-                            $knetInfomation.= __('Error Message', 'woothemes')."    : $ErrorText\n";
+                            $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
+                            $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
+                            $knetInfomation.= __('track id', 'wc_knet')."         : $trackid\n";
+                            $knetInfomation.= __('Transaction id', 'wc_knet')."   : $tranid\n";
+                            $knetInfomation.= __('Refrance id', 'wc_knet')."      : $ref\n";
+                            $knetInfomation.= __('Error', 'wc_knet')."            : $Error\n";
+                            $knetInfomation.= __('Error Message', 'wc_knet')."    : $ErrorText\n";
                             $order->add_order_note($knetInfomation);
                             $order->update_status('refunded');
 
@@ -416,7 +481,7 @@ define("STATUS_NEW","new");
                 $ResPaymentId   =   (isset($_REQUEST['paymentid'])) ? sanitize_text_field($_REQUEST['paymentid']) : null; 		//Payment Id
                 $ResTrackID     =   (isset($_REQUEST['trackid']))   ? sanitize_text_field($_REQUEST['trackid']) : null;       	//Merchant Track ID
                 $ResErrorNo     =   (isset($_REQUEST['Error']))     ? sanitize_text_field($_REQUEST['Error']) : null;           //Error Number
-                $ResResult      =   (isset($_REQUEST['result']))    ? sanitize_text_field($_REQUEST['result']) : null;           //Transaction Result
+                //$ResResult      =   (isset($_REQUEST['result']))    ? sanitize_text_field($_REQUEST['result']) : null;           //Transaction Result
                 $ResPosdate     =   (isset($_REQUEST['postdate']))  ? sanitize_text_field($_REQUEST['postdate']) : null;         //Postdate
                 $ResTranId      =   (isset($_REQUEST['tranid']))    ? sanitize_text_field($_REQUEST['tranid']) : null;         //Transaction ID
                 $ResAuth        =   (isset($_REQUEST['auth']))  ? sanitize_text_field($_REQUEST['auth']) : null;               //Auth Code		
@@ -588,7 +653,7 @@ define("STATUS_NEW","new");
      * @return string
      */
     function wc_knet_load_textdomain() {
-        load_plugin_textdomain( 'wc_knet', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+        return load_plugin_textdomain( 'wc_knet', false, basename( dirname( __FILE__ ) ) . '/languages/' );
     }
     add_action( 'plugins_loaded', 'wc_knet_load_textdomain' );
 
@@ -620,7 +685,7 @@ define("STATUS_NEW","new");
 
     });
 
-    add_action("admin_init",function ($request){
+    add_action("admin_init",function (){
         $action = esc_attr($_GET["wc_knet_export"] ?? "");
         if(is_admin()){
             if(sanitize_text_field($action) == "excel"){
@@ -658,7 +723,7 @@ define("STATUS_NEW","new");
 
     });
     // call to install data
-    register_activation_hook( __FILE__, 'create_transactions_db_table' );
+    register_activation_hook( __FILE__, 'create_transactions_db_table');
 
     /**
      * notify is currency not KWD
@@ -672,5 +737,7 @@ define("STATUS_NEW","new");
          </div>';
         }
     }
-   
+add_action( 'woocommerce_before_email_order', 'add_order_instruction_email', 10, 2 );
+
+
 ?>

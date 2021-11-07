@@ -105,6 +105,10 @@ msgstr "تصدير ال  csv"
 msgid "No Transations avaliable."
 msgstr "لم يتم العثور علي عمليات دفع"
 
+msgid "Knet details"
+msgstr "بيانات عملية الكي نت"
+
+
 
 
 

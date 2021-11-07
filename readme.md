@@ -41,6 +41,9 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 = 2.0.0 =
 * add knet transations list for order
 * export transations to csv,excel
+* add knet payment details to thank you page
+* add knet payment details to email
+* add html template for knet payment details
 * change licenses to mit
 
 = 1.1.0 =
