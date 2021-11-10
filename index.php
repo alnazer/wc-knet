@@ -3,8 +3,8 @@
 *Plugin Name: Payment Gateway for knet on WooCommerce
 *Plugin URI: https://github.com/alnazer/woocommerce-payment-kent-v2
 *Description: The new update of the K-Net payment gateway via woocommerce paymemt.
-*Author: Hassan hassanaliksa@gmail.com +96590033807
-*Version: 2.1.0
+*Author: Hassan - hassanaliksa@gmail.com - +96590033807
+*Version: 2.2.1
 *Author URI: https://github.com/alnazer
 *Text Domain: wc_knet
 * Domain Path: /languages
@@ -14,10 +14,11 @@
 */
 defined( 'ABSPATH' ) || exit;
 define("WC_KNET_TABLE","wc_knet_transactions");
-define("WC_KNET_DV_VERSION","1.0");
-define("STATUS_SUCCESS","success");
-define("STATUS_FAIL","fail");
-define("STATUS_NEW","new");
+define("WC_KNET_DV_VERSION","1.1");
+define("WC_STATUS_SUCCESS","success");
+define("WC_STATUS_FAIL","fail");
+define("WC_STATUS_NEW","new");
+
     // include transactions table
     require_once plugin_dir_path(__FILE__)."transactions.php";
     require_once plugin_dir_path(__FILE__)."wc_knet_trans_grid.php";
@@ -25,12 +26,18 @@ define("STATUS_NEW","new");
     // initialization payment class when plugin load
     $WC_KNET_CLASS_NAME = "WC_Gateway_Knet";
     add_action( 'plugins_loaded', 'init_wc_knet',0);
-
+ 
     function init_wc_knet()
     {
+        
 
         if ( !class_exists( 'WC_Payment_Gateway' ) ) {return;}
         WC_KNET_Plugin::get_instance();
+        // create table in data base
+        if ( get_site_option('wc_knet_db_version') != WC_KNET_DV_VERSION ) {
+           
+            create_transactions_db_table();
+        }
         /**
          *  Knet Gateway.
          *
@@ -47,7 +54,7 @@ define("STATUS_NEW","new");
             private $password;
             private $resource_key;
             private $GatewayUrl='https://kpaytest.com.kw/';
-            private $paymentUrl = 'id={id}&password={password}&action=1&langid=AR&currencycode=414&amt={amt}&responseURL={responseURL}&errorURL={errorURL}&trackid={trackid}&udf1={udf1}&udf2={udf2}&udf3={udf3}&udf4={udf4}&udf5={udf5}';
+            private $paymentUrl = 'id={id}&password={password}&action=1&langid={lang}&currencycode=414&amt={amt}&responseURL={responseURL}&errorURL={errorURL}&trackid={trackid}&udf1={udf1}&udf2={udf2}&udf3={udf3}&udf4={udf4}&udf5={udf5}';
             private $name = "";
             private $email = "";
             private $mobile = "";
@@ -55,6 +62,7 @@ define("STATUS_NEW","new");
             private $responseURL;
             private $errorURL;
             public $is_test;
+            public $lang = "AR";
             /**
              * @var string
              */
@@ -63,6 +71,7 @@ define("STATUS_NEW","new");
             function __construct()
             {
 
+                
                 $this->init_gateway();
                 $this->init_form_fields();
                 $this->init_settings();
@@ -71,6 +80,7 @@ define("STATUS_NEW","new");
                 $this->tranportal_id = $this->get_option('tranportal_id');
                 $this->password = $this->get_option('password');
                 $this->resource_key = $this->get_option('resource_key');
+                $this->lang = $this->get_option('lang');
                 $this->is_test = $this->get_option('is_test');
                 if($this->is_test == "no")
                 {
@@ -123,7 +133,7 @@ define("STATUS_NEW","new");
                     "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
                     "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
                     "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
-                    "{created_at}" => ($knet_detials->created_at) ? $knet_detials->created_at : "---",
+                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y g:i a", strtotime($knet_detials->created_at) ) : "---",
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace_lang = [
@@ -231,9 +241,9 @@ define("STATUS_NEW","new");
                         'title'       => 'Test mode',
                         'label'       => 'Enable Test Mode',
                         'type'        => 'checkbox',
-                        'description' => 'Place the payment gateway in test mode using test API keys.',
+                        'description' => __("Place the payment gateway in test mode using test. only this user roles [Shop manager,Administrator] can test payment","wc_knet"),
                         'default'     => 'no',
-                        'desc_tip'    => true,
+                        'desc_tip'    => false,
                     ),
                     'title' => array(
                         'title' => __( 'Title', 'woocommerce' ),
@@ -267,6 +277,17 @@ define("STATUS_NEW","new");
                         'default' => '',
                         'desc_tip'      => true,
                     ),
+                    'lang' => [
+                        'title' => __('Language', 'cbk_knet'),
+                        'type' => 'select',
+                        'description' => __('payment page lang', 'cbk_knet'),
+                        'default' => 'AR',
+                        'options' => [
+                            'AR' => __('Arabic'),
+                            'EN' => __('English'),
+                        ],
+                        'desc_tip' => false,
+                    ],
                     
                 );        
             }
@@ -380,7 +401,7 @@ define("STATUS_NEW","new");
                 $replace_array['{trackid}'] = $this->trackId;
                 $replace_array['{responseURL}'] = $this->responseURL;
                 $replace_array['{errorURL}'] = $this->errorURL;
-
+                $replace_array['{lang}'] = $this->lang;
                 $replace_array['{udf1}'] = $order->get_id();
                 $replace_array['{udf2}'] = $this->name;
                 $replace_array['{udf3}'] =$this->email;
@@ -417,7 +438,7 @@ define("STATUS_NEW","new");
                         "tran_id"=>$tranid,
                         "ref_id"=>$ref,
                         "result"=>$result,
-                        'status' => ($result == "CAPTURED") ? STATUS_SUCCESS : STATUS_FAIL,
+                        'status' => ($result == "CAPTURED") ? WC_STATUS_SUCCESS : WC_STATUS_FAIL,
                         "amount" => $resnopseData["ammount"],
                         "data" => $resnopseData["data"],
                         'error'=>$ErrorText,
@@ -646,7 +667,15 @@ define("STATUS_NEW","new");
      **/
     function woocommerce_add_wc_knet_gateway($methods) {
         global $WC_KNET_CLASS_NAME;
-        $methods[] = $WC_KNET_CLASS_NAME;
+        $cbk_method = new WC_Gateway_Knet();
+        if($cbk_method->is_test == "yes"){
+            $wp_get_current_user = wp_get_current_user();
+            if(isset($wp_get_current_user) && (in_array("administrator",$wp_get_current_user->roles) || in_array("shop_manager",$wp_get_current_user->roles))){
+                $methods[] = $WC_KNET_CLASS_NAME;
+            }
+        }else{
+            $methods[] = $WC_KNET_CLASS_NAME;
+        }
         return $methods;
     }
     add_filter('woocommerce_payment_gateways', 'woocommerce_add_wc_knet_gateway' );

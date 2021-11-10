@@ -5,7 +5,9 @@ defined( 'ABSPATH' ) || exit;
  * Export data to MS Excel. PHP XLSX generator
  * Author: sergey.shuchkin@gmail.com
  */
-
+if(class_exists("SimpleXLSXGen")){
+    return;
+}
 class SimpleXLSXGen {
 
     public $curSheet;
