@@ -50,6 +50,7 @@ define("WC_STATUS_NEW","new");
      */
         class WC_Gateway_Knet extends WC_Payment_Gateway {
 
+
             private $tranportal_id;
             private $password;
             private $resource_key;
@@ -71,7 +72,6 @@ define("WC_STATUS_NEW","new");
             function __construct()
             {
 
-                
                 $this->init_gateway();
                 $this->init_form_fields();
                 $this->init_settings();
@@ -94,12 +94,30 @@ define("WC_STATUS_NEW","new");
 	            add_action("woocommerce_order_details_before_order_table", [$this,'wc_knet_details'],10,1);
 	            // add details to email
                 add_action("woocommerce_email_after_order_table", [$this,'wc_knet_email_details'],10,3);
+                add_filter('woocommerce_available_payment_gateways', [$this,'wc_conditional_payment_gateways'], 10, 1);
 
-                // add routers
-                //add_action('init', [$this,'wc_knet_rewrite_tag_rule'], 10, 0);
             }
 
+            public  function  wc_conditional_payment_gateways($available_gateways){
+
+                if(is_admin()){
+                    return $available_gateways;
+                }
+                if($this->is_test == "yes"){
+                    $wp_get_current_user = wp_get_current_user();
+                    if(isset($wp_get_current_user)){
+                        if(!in_array("shop_manager",$wp_get_current_user->roles) && !in_array("administrator",$wp_get_current_user->roles)){
+                            unset($available_gateways[$this->id]);
+                        }
+                    }
+                }
+                return $available_gateways;
+            }
             public function wc_knet_details($order){
+
+                if($order->get_payment_method() != $this->id) {
+                    return;
+                }
                 $knet_details = wc_get_transation_by_orderid($order->get_id());
 
                 if(!$knet_details){
@@ -110,6 +128,9 @@ define("WC_STATUS_NEW","new");
 
             }
             public function wc_knet_email_details($order,$is_admin,$text_plan){
+                if($order->get_payment_method() != $this->id) {
+                    return;
+                }
                 $knet_details = wc_get_transation_by_orderid($order->get_id());
                 if(!$knet_details){
                     return;
@@ -149,6 +170,7 @@ define("WC_STATUS_NEW","new");
                 $replace = array_merge($replace, $replace_lang);
                 return str_replace(array_keys($replace), array_values($replace), $template);
             }
+
             public function wc_woo_change_order_received_text($str) {
 	            global  $id;
 	            $order = $this->get_order_in_recived_page($id,true);
@@ -659,23 +681,17 @@ define("WC_STATUS_NEW","new");
             /** ======== Payment Encrypt Functions Ended ====== */
           
         } 
-        
+
     }
- 
+
     /**
      * Add the Gateway to WooCommerce
      **/
     function woocommerce_add_wc_knet_gateway($methods) {
         global $WC_KNET_CLASS_NAME;
-        $cbk_method = new WC_Gateway_Knet();
-        if($cbk_method->is_test == "yes"){
-            $wp_get_current_user = wp_get_current_user();
-            if(isset($wp_get_current_user) && (in_array("administrator",$wp_get_current_user->roles) || in_array("shop_manager",$wp_get_current_user->roles))){
-                $methods[] = $WC_KNET_CLASS_NAME;
-            }
-        }else{
-            $methods[] = $WC_KNET_CLASS_NAME;
-        }
+
+        $methods[] = $WC_KNET_CLASS_NAME;
+
         return $methods;
     }
     add_filter('woocommerce_payment_gateways', 'woocommerce_add_wc_knet_gateway' );
