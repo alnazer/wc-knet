@@ -51,6 +51,8 @@ define("WC_STATUS_NEW","new");
         class WC_Gateway_Knet extends WC_Payment_Gateway {
 
 
+            private $exchange;
+            private $currency;
             private $tranportal_id;
             private $password;
             private $resource_key;
@@ -77,6 +79,8 @@ define("WC_STATUS_NEW","new");
                 $this->init_settings();
                 $this->title = $this->get_option('title');
                 $this->description = $this->get_option('description');
+                $this->currency = get_option('woocommerce_currency');
+                $this->exchange = $this->get_option('exchange');
                 $this->tranportal_id = $this->get_option('tranportal_id');
                 $this->password = $this->get_option('password');
                 $this->resource_key = $this->get_option('resource_key');
@@ -97,148 +101,9 @@ define("WC_STATUS_NEW","new");
                 add_filter('woocommerce_available_payment_gateways', [$this,'wc_conditional_payment_gateways'], 10, 1);
 
             }
-
-            public  function  wc_conditional_payment_gateways($available_gateways){
-
-                if(is_admin()){
-                    return $available_gateways;
-                }
-                if($this->is_test == "yes"){
-                    $available_gateways[$this->id]->title= $available_gateways[$this->id]->title. " <b style=\"color:red\">" .__("Test Mode","wc_knet")."</b>";
-                    $wp_get_current_user = wp_get_current_user();
-                    if(isset($wp_get_current_user)){
-                        if(!in_array("shop_manager",$wp_get_current_user->roles) && !in_array("administrator",$wp_get_current_user->roles)){
-                            unset($available_gateways[$this->id]);
-                        }
-                    }
-
-                }
-                return $available_gateways;
-            }
-            public function wc_knet_details($order){
-
-                if($order->get_payment_method() != $this->id) {
-                    return;
-                }
-                $knet_details = wc_get_transation_by_orderid($order->get_id());
-
-                if(!$knet_details){
-                    return;
-                }
-                $output = $this->format_email($order,$knet_details,"knet-details.html");
-                echo $output;
-
-            }
-            public function wc_knet_email_details($order,$is_admin,$text_plan){
-                if($order->get_payment_method() != $this->id) {
-                    return;
-                }
-                $knet_details = wc_get_transation_by_orderid($order->get_id());
-                if(!$knet_details){
-                    return;
-                }
-                if($text_plan){
-                    $output = $this->format_email($order,$knet_details,"emails/knet-text-details.html");
-                }else{
-                    $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
-                }
-                echo $output;
-            }
-
-            private function format_email($order,$knet_detials,$template="knet-details.html")
-            {
-                $template = file_get_contents(plugin_dir_path(__FILE__).$template);
-                $replace = [
-                    "{icon}"=> plugin_dir_url(__FILE__)."assets/knet-logo.png",
-                    "{title}" => __("Knet details","wc_knet"),
-                    "{payment_id}" => ($knet_detials->payment_id) ? $knet_detials->payment_id : "---",
-                    "{track_id}" => ($knet_detials->track_id) ? $knet_detials->track_id : "---",
-                    "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
-                    "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
-                    "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
-                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y g:i a", strtotime($knet_detials->created_at) ) : "---",
-                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
-                ];
-                $replace_lang = [
-                    "_lang(result)" => __("Result","wc_knet"),
-                    "_lang(payment_id)" => __("Payment id","wc_knet"),
-                    "_lang(trnac_id)" => __("Transaction id","wc_knet"),
-                    "_lang(track_id)" => __("Tracking id","wc_knet"),
-                    "_lang(amount)" => __("Amount","wc_knet"),
-                    "_lang(ref_id)" => __("Refrance id","wc_knet"),
-                    "_lang(created_at)" => __('Created at', "wc_knet"),
-                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
-                ];
-                $replace = array_merge($replace, $replace_lang);
-                return str_replace(array_keys($replace), array_values($replace), $template);
-            }
-
-            public function wc_woo_change_order_received_text($str) {
-	            global  $id;
-	            $order = $this->get_order_in_recived_page($id,true);
-                $order_status = $order->get_status();
-	            return  sprintf("%s <b><span style=\"color:%s\">%s</span></b>.",__("Thank you. Your order has been","wc_knet"),$this->get_status_color($order_status),__(ucfirst($order_status),"woocommerce"));
-            }
-
-	        public function wc_thank_you_title( $old_title){
-            	global  $id;
-		        $order_status = $this->get_order_in_recived_page($id);
-
-		        if ( isset ( $order_status ) ) {
-			       return  sprintf( "%s , <b><span style=\"color:%s\">%s</span></b>",__('Order',"wc_knet"),$this->get_status_color($order_status), esc_html( __(ucfirst($order_status),"woocommerce")) );
-		        }
-		        return $old_title;
-	        }
-
-	        private function get_order_in_recived_page($page_id,$return_order= false){
-		        global $wp;
-		        if ( is_order_received_page() && get_the_ID() === $page_id ) {
-			        $order_id  = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
-			        $order_key = apply_filters( 'woocommerce_thankyou_order_key', empty( $_GET['key'] ) ? '' : wc_clean( $_GET['key'] ) );
-			        if ( $order_id > 0 ) {
-				        $order = new WC_Order( $order_id );
-
-				        if ( $order->get_order_key() != $order_key ) {
-					        $order = false;
-				        }
-				        if($return_order){
-                            return $order;
-                        }
-				        return $order->get_status();
-			        }
-		        }
-			return false;
-	        }
-
-            /**
-             * set status color
-             * @param $status
-             * @return string
-             */
-	        private function get_status_color($status){
-				switch ($status){
-					case "pending":
-						return "#0470fb";
-					case "processing":
-						return "#fbbd04";
-					case "on-hold":
-						return "#04c1fb";
-					case "completed":
-						return "green";
-					default:
-						return "#fb0404";
-				}
-	        }
-
-            /**
-             * define knet route like knetresponce/success
-             */
-            /*public function wc_knet_rewrite_tag_rule() {
-                add_rewrite_rule( '^knetresponce/([^/]*)/?', 'index.php?knetresponce=$matches[1]','top' );
-            }*/
             /**
              * initialization gateway call default data
-             * like id,icon 
+             * like id,icon
              */
             public function init_gateway()
             {
@@ -246,10 +111,10 @@ define("WC_STATUS_NEW","new");
                 $this->icon               =  plugins_url( 'assets/knet-logo.png' , __FILE__ );
                 $this->method_title       = __('Knet', 'wc_knet');
                 $this->method_description = __( 'intgration with knet php raw.', 'woocommerce' );
-                $this->has_fields         = true; 
+                $this->has_fields         = true;
             }
             /**
-             * Define Form Option fields 
+             * Define Form Option fields
              * - Options for payment like 'title', 'description', 'tranportal_id', 'password', 'resource_key'
              **/
             public function init_form_fields()
@@ -277,10 +142,18 @@ define("WC_STATUS_NEW","new");
                         'desc_tip'      => true,
                     ),
                     'description' => array(
-                            'title' => __( 'Description', 'woocommerce' ),
-                            'type' => 'textarea',
-                            'default' => ''
+                        'title' => __( 'Description', 'woocommerce' ),
+                        'type' => 'textarea',
+                        'default' => ''
                     ),
+                    'exchange' => [
+                        'title' => __('Currency exchange rate ', 'wc_knet'),
+                        'type' => 'number',
+                        'custom_attributes' => array( 'step' => 'any', 'min' => '0' ),
+                        'description' => __('It is the rate of multiplying the currency account in the event that the base currency of the store is not the Kuwaiti dinar', 'wc_knet')." ".__('KWD = exchange rate * amount(USD)', 'wc_knet'),
+                        'default' => 1,
+                        'desc_tip' => false,
+                    ],
                     'tranportal_id' => array(
                         'title' => __( 'Tranportal Id', 'wc_knet' ),
                         'type' => 'text',
@@ -312,8 +185,8 @@ define("WC_STATUS_NEW","new");
                         ],
                         'desc_tip' => false,
                     ],
-                    
-                );        
+
+                );
             }
             /**
              * Admin Panel Options
@@ -327,7 +200,6 @@ define("WC_STATUS_NEW","new");
                 echo '</table>';
 
             }
-
             /**
              * Process payment
              * return array
@@ -342,10 +214,10 @@ define("WC_STATUS_NEW","new");
              */
             function process_payment( $order_id )
             {
- 
+
                 global $woocommerce;
                 $order = new WC_Order( $order_id );
-                 if(!$order->get_id())
+                if(!$order->get_id())
                 {
                     wc_add_notice( __("Order not found", "wc_knet"), 'error' );
                     return array(
@@ -393,10 +265,10 @@ define("WC_STATUS_NEW","new");
                 $param =    $this->encryptAES($this->paymentUrl,$this->resource_key)."&tranportalId=".$this->tranportal_id."&responseURL=".$this->responseURL."&errorURL=".$this->errorURL;
                 $payURL=    $this->GatewayUrl."kpg/PaymentHTTP.htm?param=paymentInit"."&trandata=".$param;
                 return [
-                        'status' => 'success',
-                        'url' =>$payURL,
-                        'payment_id' => $this->trackId
-                    ];
+                    'status' => 'success',
+                    'url' =>$payURL,
+                    'payment_id' => $this->trackId
+                ];
             }
 
             /**
@@ -421,7 +293,7 @@ define("WC_STATUS_NEW","new");
                 $replace_array = array();
                 $replace_array['{id}'] = $this->tranportal_id;
                 $replace_array['{password}'] = $this->password;
-                $replace_array['{amt}'] = $order->get_total();
+                $replace_array['{amt}'] = $this->getTotalAmount($order);
                 $replace_array['{trackid}'] = $this->trackId;
                 $replace_array['{responseURL}'] = $this->responseURL;
                 $replace_array['{errorURL}'] = $this->errorURL;
@@ -433,6 +305,7 @@ define("WC_STATUS_NEW","new");
                 $replace_array['{udf5}'] = '';
                 $this->paymentUrl = str_replace(array_keys($replace_array),array_values($replace_array),$this->paymentUrl);
             }
+
             /**
              * update order after responce Done from knet
              * return string
@@ -619,9 +492,205 @@ define("WC_STATUS_NEW","new");
                         //UDF5
                 return  $result;
             }
+
+            /** ====================== Order functions =======
+             * tis all function modfide order
+             */
+
+            /** get ammount after exchange
+             * @param $order
+             * @return float|int
+             */
+            private function getTotalAmount($order){
+                if($this->currency == "KWD"){
+                    return $order->get_total();
+                }elseif(!empty($this->exchange) && $this->exchange > 0){
+                    return $order->get_total()*$this->exchange;
+                }
+                return $order->get_total();
+
+            }
+
+            /**
+             * hide gateways in test mode
+             * @param $available_gateways
+             * @return mixed
+             */
+            public  function  wc_conditional_payment_gateways($available_gateways){
+
+                if(is_admin()){
+                    return $available_gateways;
+                }
+                if($this->is_test == "yes"){
+                    $available_gateways[$this->id]->title= $available_gateways[$this->id]->title. " <b style=\"color:red\">" .__("Test Mode","wc_knet")."</b>";
+                    $wp_get_current_user = wp_get_current_user();
+                    if(isset($wp_get_current_user)){
+                        if(!in_array("shop_manager",$wp_get_current_user->roles) && !in_array("administrator",$wp_get_current_user->roles)){
+                            unset($available_gateways[$this->id]);
+                        }
+                    }
+                }
+                return $available_gateways;
+            }
+
+            /**
+             * display html table KNET details in received order page
+             * @param $order
+             */
+            public function wc_knet_details($order){
+
+                if($order->get_payment_method() != $this->id) {
+                    return;
+                }
+                $knet_details = wc_get_transation_by_orderid($order->get_id());
+
+                if(!$knet_details){
+                    return;
+                }
+                $output = $this->format_email($order,$knet_details,"knet-details.html");
+                echo $output;
+
+            }
+
+            /**
+             * display html table KNET details in email message
+             * @param $order
+             * @param $is_admin
+             * @param $text_plan
+             */
+            public function wc_knet_email_details($order,$is_admin,$text_plan){
+                if($order->get_payment_method() != $this->id) {
+                    return;
+                }
+                $knet_details = wc_get_transation_by_orderid($order->get_id());
+                if(!$knet_details){
+                    return;
+                }
+                if($text_plan){
+                    $output = $this->format_email($order,$knet_details,"emails/knet-text-details.html");
+                }else{
+                    $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
+                }
+                echo $output;
+            }
+
+            /**
+             * format email knet details html table
+             * @param $order
+             * @param $knet_detials
+             * @param string $template
+             * @return mixed
+             */
+            private function format_email($order,$knet_detials,$template="knet-details.html")
+            {
+                $template = file_get_contents(plugin_dir_path(__FILE__).$template);
+                $replace = [
+                    "{icon}"=> plugin_dir_url(__FILE__)."assets/knet-logo.png",
+                    "{title}" => __("Knet details","wc_knet"),
+                    "{payment_id}" => ($knet_detials->payment_id) ? $knet_detials->payment_id : "---",
+                    "{track_id}" => ($knet_detials->track_id) ? $knet_detials->track_id : "---",
+                    "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
+                    "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
+                    "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
+                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y g:i a", strtotime($knet_detials->created_at) ) : "---",
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                ];
+                $replace_lang = [
+                    "_lang(result)" => __("Result","wc_knet"),
+                    "_lang(payment_id)" => __("Payment id","wc_knet"),
+                    "_lang(trnac_id)" => __("Transaction id","wc_knet"),
+                    "_lang(track_id)" => __("Tracking id","wc_knet"),
+                    "_lang(amount)" => __("Amount","wc_knet"),
+                    "_lang(ref_id)" => __("Refrance id","wc_knet"),
+                    "_lang(created_at)" => __('Created at', "wc_knet"),
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                ];
+                $replace = array_merge($replace, $replace_lang);
+                return str_replace(array_keys($replace), array_values($replace), $template);
+            }
+
+            /**
+             * add colored order status in received page
+             * @param $str
+             * @return string
+             */
+            public function wc_woo_change_order_received_text($str) {
+                global  $id;
+                $order = $this->get_order_in_recived_page($id,true);
+                $order_status = $order->get_status();
+                return  sprintf("%s <b><span style=\"color:%s\">%s</span></b>.",__("Thank you. Your order has been","wc_knet"),$this->get_status_color($order_status),__(ucfirst($order_status),"woocommerce"));
+            }
+
+            /**
+             * add colored order status in received page
+             * @param $old_title
+             * @return string
+             */
+            public function wc_thank_you_title( $old_title){
+                global  $id;
+                $order_status = $this->get_order_in_recived_page($id);
+
+                if ( isset ( $order_status ) ) {
+                    return  sprintf( "%s , <b><span style=\"color:%s\">%s</span></b>",__('Order',"wc_knet"),$this->get_status_color($order_status), esc_html( __(ucfirst($order_status),"woocommerce")) );
+                }
+                return $old_title;
+            }
+
+            /**
+             * get order details in received page
+             * @param $page_id
+             * @param bool $return_order
+             * @return bool|string|WC_Order
+             */
+            private function get_order_in_recived_page($page_id,$return_order= false){
+                global $wp;
+                if ( is_order_received_page() && get_the_ID() === $page_id ) {
+                    $order_id  = apply_filters( 'woocommerce_thankyou_order_id', absint( $wp->query_vars['order-received'] ) );
+                    $order_key = apply_filters( 'woocommerce_thankyou_order_key', empty( $_GET['key'] ) ? '' : wc_clean( $_GET['key'] ) );
+                    if ( $order_id > 0 ) {
+                        $order = new WC_Order( $order_id );
+
+                        if ( $order->get_order_key() != $order_key ) {
+                            $order = false;
+                        }
+                        if($return_order){
+                            return $order;
+                        }
+                        return $order->get_status();
+                    }
+                }
+                return false;
+            }
+
+            /**
+             * set status color
+             * @param $status
+             * @return string
+             */
+            private function get_status_color($status){
+                switch ($status){
+                    case "pending":
+                        return "#0470fb";
+                    case "processing":
+                        return "#fbbd04";
+                    case "on-hold":
+                        return "#04c1fb";
+                    case "completed":
+                        return "green";
+                    default:
+                        return "#fb0404";
+                }
+            }
+
+
             /** ======== Payment Encrypt Functions Started ======
              * this functions created by knet devolper don't change any thing
             */
+            /**
+             * @param $str
+             * @param $key
+             * @return string
+             */
             public function encryptAES($str,$key)
             {
                 $str = $this->pkcs5_pad($str); 
@@ -633,12 +702,21 @@ define("WC_STATUS_NEW","new");
                 return $encrypted;
             }
 
+            /**
+             * @param $text
+             * @return string
+             */
             public function pkcs5_pad ($text)
             {
                 $blocksize = 16;
                 $pad = $blocksize - (strlen($text) % $blocksize);
                 return $text . str_repeat(chr($pad), $pad);
             }
+
+            /**
+             * @param $byteArray
+             * @return string
+             */
             public function byteArray2Hex($byteArray)
             {
                 $chars = array_map("chr", $byteArray);
@@ -646,6 +724,11 @@ define("WC_STATUS_NEW","new");
                 return bin2hex($bin);
             }
 
+            /**
+             * @param $code
+             * @param $key
+             * @return bool|string
+             */
             public function decrypt($code,$key)
             { 
                 $code =  $this->hex2ByteArray(trim($code));
@@ -656,19 +739,30 @@ define("WC_STATUS_NEW","new");
                 return $this->pkcs5_unpad($decrypted);
             }
 
+            /**
+             * @param $hexString
+             * @return array
+             */
             public function hex2ByteArray($hexString)
             {
                 $string = hex2bin($hexString);
                 return unpack('C*', $string);
             }
 
-
+            /**
+             * @param $byteArray
+             * @return string
+             */
             public function byteArray2String($byteArray)
             {
                 $chars = array_map("chr", $byteArray);
                 return join($chars);
             }
 
+            /**
+             * @param $text
+             * @return bool|string
+             */
             public function pkcs5_unpad($text)
             {
                 $pad = ord($text{strlen($text)-1});
@@ -686,9 +780,12 @@ define("WC_STATUS_NEW","new");
 
     }
 
+
     /**
      * Add the Gateway to WooCommerce
-     **/
+     * @param $methods
+     * @return mixed
+     */
     function woocommerce_add_wc_knet_gateway($methods) {
         global $WC_KNET_CLASS_NAME;
 
@@ -737,6 +834,9 @@ define("WC_STATUS_NEW","new");
 
     });
 
+    /**
+     * export files
+     */
     add_action("admin_init",function (){
         $action = esc_attr($_GET["wc_knet_export"] ?? "");
         if(is_admin()){

@@ -50,6 +50,13 @@ msgstr "طلبك "
 msgid "currency must be KWD when using this knet payment"
 msgstr "العملة يجب ان تكون بالدينار الكويت KWD عندما تحدد الكي نت كخيار للدفع "
 
+#: index.php:112
+msgid "Currency exchange rate"
+msgstr "معدل تغيير العملة"
+
+
+msgid "It is the rate of multiplying the currency account in the event that the base currency of the store is not the Kuwaiti dinar"
+msgstr "هو معدل ضرب حساب العملة في حالة لم تكن العملة الاساسية للمتجر الدينار الكويتي"
 
 msgid "fail"
 msgstr "فشلت"

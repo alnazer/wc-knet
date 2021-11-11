@@ -227,7 +227,7 @@ class wc_knet_trans_grid extends WP_List_Table
             'per_page' => $per_page //WE have to determine how many items to show on a page
         ] );
 
-        $this->items = self::get_transations( $per_page = 5, $page_number = 1 );
+        $this->items = self::get_transations( $per_page, $current_page);
     }
     /**
      * Returns the count of records in the database.
@@ -246,6 +246,8 @@ class wc_knet_trans_grid extends WP_List_Table
         if ( ! empty( $_REQUEST['orderby'] ) ) {
             $sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
             $sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+        }else{
+            $sql .= " ORDER BY `id` DESC ";
         }
 
         $sql .= " LIMIT $per_page";
@@ -293,7 +295,7 @@ class WC_KNET_Plugin
         $option = 'per_page';
         $args = [
             'label' => 'Transations count',
-            'default' => 5,
+            'default' => 20,
             'option' => 'trans_per_page'
         ];
 

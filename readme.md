@@ -40,7 +40,9 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 
 - add language payment page in plugin options
 - only user has role [Shop manager,Administrator] allowed test payment other client cannot use gateway 
-
+- add exchange currency rate
+- transactions order by newest 
+  d
 = 2.2.1 =
 
 - fixed database create table error
