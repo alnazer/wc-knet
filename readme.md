@@ -1,5 +1,5 @@
 === Payment Gateway for KNET ===
-Contributors: hassan
+Contributors: alnazer
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
 Tested up to: 5.8.2
