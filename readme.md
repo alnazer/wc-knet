@@ -76,10 +76,10 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 * ![#04c1fb](https://via.placeholder.com/15/0470fb/000000?text=+) `on-hold`
 * ![#green](https://via.placeholder.com/15/green/000000?text=+) `completed`
 * ![#fb0404](https://via.placeholder.com/15/fb0404/000000?text=+) `cancelled,refunded,failed`
-
-## License
-
-##support
+## support
 contact info email: hassanaliksa@gmail.com
  mobile : +96590033807
+ 
+## License
+
 [MIT](https://choosealicense.com/licenses/mit/)
