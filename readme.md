@@ -1,4 +1,4 @@
-=== Payment Gateway for knet on WooCommerce ===
+=== Payment Gateway for KNET ===
 Contributors: hassan
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
@@ -25,7 +25,7 @@ or
 From merchant’s WordPress admin
 
 1. Go to plugin section-> Add new
-2. Search for “Payment Gateway for knet on WooCommerce”
+2. Search for “Payment Gateway for KNET”
 3. Click on Install Now
 4. Click on Activate
 
