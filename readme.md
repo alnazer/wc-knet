@@ -5,7 +5,7 @@ Requires at least: 5.6
 Tested up to: 5.8.2
 Tested in WooCommerce : 5.8
 Requires PHP: 7.0
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
 
