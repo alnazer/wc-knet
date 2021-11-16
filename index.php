@@ -1,54 +1,54 @@
 <?php
 /*
-*Plugin Name: Payment Gateway for knet on WooCommerce
+*Plugin Name: Payment Gateway for KNET
 *Plugin URI: https://github.com/alnazer/woocommerce-payment-kent-v2
 *Description: The new update of the K-Net payment gateway via woocommerce paymemt.
-*Author: Hassan - hassanaliksa@gmail.com - +96590033807
-*Version: 2.2.1
+*Author: hassan
+*Version: 2.3.1
 *Author URI: https://github.com/alnazer
-*Text Domain: wc_knet
+*Text Domain: wc-knet
 * Domain Path: /languages
 */
 /**
- * @package wc knet woocommerce
+ * @package wc KNET woocommerce
 */
 defined( 'ABSPATH' ) || exit;
-define("WC_KNET_TABLE","wc_knet_transactions");
-define("WC_KNET_DV_VERSION","1.1");
-define("WC_STATUS_SUCCESS","success");
-define("WC_STATUS_FAIL","fail");
-define("WC_STATUS_NEW","new");
+define("WC_PAYMENT_KNET_TABLE","wc_knet_transactions");
+define("WC_PAYMENT_KNET_DV_VERSION","1.1");
+define("WC_PAYMENT_STATUS_SUCCESS","success");
+define("WC_PAYMENT_STATUS_FAIL","fail");
+define("WC_PAYMENT_STATUS_NEW","new");
 
     // include transactions table
-    require_once plugin_dir_path(__FILE__)."transactions.php";
-    require_once plugin_dir_path(__FILE__)."wc_knet_trans_grid.php";
+    require_once plugin_dir_path(__FILE__)."wc_knet_payment_transactions.php";
+    require_once plugin_dir_path(__FILE__)."wc_knet_payment_trans_grid.php";
     require_once plugin_dir_path(__FILE__)."classes/SimpleXLSXGen.php";
     // initialization payment class when plugin load
-    $WC_KNET_CLASS_NAME = "WC_Gateway_Knet";
-    add_action( 'plugins_loaded', 'init_wc_knet',0);
+    $WC_Payment_KNET_CLASS_NAME = "WC_Payment_Gateway_KNET";
+    add_action( 'plugins_loaded', 'init_wc_knet_payment',0);
  
-    function init_wc_knet()
+    function init_wc_knet_payment()
     {
         
 
         if ( !class_exists( 'WC_Payment_Gateway' ) ) {return;}
-        WC_KNET_Plugin::get_instance();
+        WC_KNET_PAYMENT_Plugin::get_instance();
         // create table in data base
-        if ( get_site_option('wc_knet_db_version') != WC_KNET_DV_VERSION ) {
+        if ( get_site_option('wc_knet_db_version') != WC_PAYMENT_KNET_DV_VERSION ) {
            
             create_transactions_db_table();
         }
         /**
-         *  Knet Gateway.
+         *  KNET Gateway.
          *
          * Provides a VISA Payment Gateway.
          *
-         * @class       WC_Gateway_Knet
+         * @class       WC_Gateway_KNET
          * @extends     WC_Payment_Gateway
          * @version     2.2.0
          * @package     WooCommerce/Classes/Payment
      */
-        class WC_Gateway_Knet extends WC_Payment_Gateway {
+        class WC_Payment_Gateway_KNET extends WC_Payment_Gateway {
 
 
             private $exchange;
@@ -66,6 +66,11 @@ define("WC_STATUS_NEW","new");
             private $errorURL;
             public $is_test;
             public $lang = "AR";
+            private $html_allow = array( 'h2' => array("class"=>array(),"style"=>array()),"span"=>array("style"=>array()), 'table' => array("class"=>array()),'tr' => array(), 'th' => array(), 'td' => array(),'b' => array(),'br' => array(), 'img' => array(
+                "src"=>array(),
+                "width"=>array(),
+                "alt"=>array()
+            ) );
             /**
              * @var string
              */
@@ -109,8 +114,8 @@ define("WC_STATUS_NEW","new");
             {
                 $this->id                 = 'wc_knet';
                 $this->icon               =  plugins_url( 'assets/knet-logo.png' , __FILE__ );
-                $this->method_title       = __('Knet', 'wc_knet');
-                $this->method_description = __( 'intgration with knet php raw.', 'woocommerce' );
+                $this->method_title       = __('KNET', 'wc-knet');
+                $this->method_description = __( 'intgration with KNET php raw.', 'woocommerce' );
                 $this->has_fields         = true;
             }
             /**
@@ -123,14 +128,14 @@ define("WC_STATUS_NEW","new");
                     'enabled' => array(
                         'title' => __( 'Enable/Disable', 'woocommerce' ),
                         'type' => 'checkbox',
-                        'label' => __( 'Enable Knet Payment', 'woocommerce' ),
+                        'label' => __( 'Enable KNET Payment', 'woocommerce' ),
                         'default' => 'yes'
                     ),
                     'is_test' => array(
                         'title'       => 'Test mode',
                         'label'       => 'Enable Test Mode',
                         'type'        => 'checkbox',
-                        'description' => __("Place the payment gateway in test mode using test. only this user roles [Shop manager,Administrator] can test payment","wc_knet"),
+                        'description' => __("Place the payment gateway in test mode using test. only this user roles [Shop manager,Administrator] can test payment","wc-knet"),
                         'default'     => 'no',
                         'desc_tip'    => false,
                     ),
@@ -138,7 +143,7 @@ define("WC_STATUS_NEW","new");
                         'title' => __( 'Title', 'woocommerce' ),
                         'type' => 'text',
                         'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-                        'default' => __( 'knet', 'woocommerce' ),
+                        'default' => __( 'KNET', 'woocommerce' ),
                         'desc_tip'      => true,
                     ),
                     'description' => array(
@@ -147,32 +152,32 @@ define("WC_STATUS_NEW","new");
                         'default' => ''
                     ),
                     'exchange' => [
-                        'title' => __('Currency exchange rate ', 'wc_knet'),
+                        'title' => __('Currency exchange rate ', 'wc-knet'),
                         'type' => 'number',
                         'custom_attributes' => array( 'step' => 'any', 'min' => '0' ),
-                        'description' => __('It is the rate of multiplying the currency account in the event that the base currency of the store is not the Kuwaiti dinar', 'wc_knet')." ".__('KWD = exchange rate * amount(USD)', 'wc_knet'),
+                        'description' => __('It is the rate of multiplying the currency account in the event that the base currency of the store is not the Kuwaiti dinar', 'wc-knet')." ".__('KWD = exchange rate * amount(USD)', 'wc-knet'),
                         'default' => 1,
                         'desc_tip' => false,
                     ],
                     'tranportal_id' => array(
-                        'title' => __( 'Tranportal Id', 'wc_knet' ),
+                        'title' => __( 'Tranportal Id', 'wc-knet' ),
                         'type' => 'text',
-                        'label' => __( 'Necessary data requested from the bank ', 'wc_knet' ),
+                        'label' => __( 'Necessary data requested from the bank ', 'wc-knet' ),
                         'default' => ''
                     ),
                     'password' => array(
-                        'title' => __( 'Transportal Password', 'wc_knet' ),
+                        'title' => __( 'Transportal Password', 'wc-knet' ),
                         'type' => 'password',
-                        'description' => __( 'Necessary data requested from the bank ', 'wc_knet' ),
+                        'description' => __( 'Necessary data requested from the bank ', 'wc-knet' ),
                         'default' => '',
-                        'desc_tip'      => true,
+                        'desc_tip'      => false,
                     ),
                     'resource_key' => array(
-                        'title' => __( 'Terminal Resource Key', 'wc_knet' ),
+                        'title' => __( 'Terminal Resource Key', 'wc-knet' ),
                         'type' => 'password',
-                        'description' => __( 'Necessary data requested from the bank', 'wc_knet' ),
+                        'description' => __( 'Necessary data requested from the bank', 'wc-knet' ),
                         'default' => '',
-                        'desc_tip'      => true,
+                        'desc_tip'      => false,
                     ),
                     'lang' => [
                         'title' => __('Language', 'cbk_knet'),
@@ -193,11 +198,11 @@ define("WC_STATUS_NEW","new");
              * - Options for bits like 'title', 'description', 'alias'
              **/
             public function admin_options(){
-                echo '<h3>'.__('Knet', 'wc_knet').'</h3>';
-                echo '<p>'.__('Knet', 'wc_knet').'</p>';
-                echo '<table class="form-table">';
+                echo wp_kses('<h3>'.__('KNET', 'wc-knet').'</h3>',["h3"=>[]]);
+                echo wp_kses('<p>'.__('KNET', 'wc-knet').'</p>',["p"=>[]]);
+                echo wp_kses('<table class="form-table">',["table"=>["class"=>[]]]);
                 $this->generate_settings_html();
-                echo '</table>';
+                echo wp_kses('</table>',["table"=>[]]);
 
             }
             /**
@@ -219,7 +224,7 @@ define("WC_STATUS_NEW","new");
                 $order = new WC_Order( $order_id );
                 if(!$order->get_id())
                 {
-                    wc_add_notice( __("Order not found", "wc_knet"), 'error' );
+                    wc_add_notice( __("Order not found", "wc-knet"), 'error' );
                     return array(
                         'result'    =>   'error',
                         'redirect'  =>   $this->get_return_url( $order )
@@ -244,7 +249,7 @@ define("WC_STATUS_NEW","new");
                 }
                 else
                 {
-                    $order->add_order_note( __('Payment error:', 'woothemes') .  __("Knet can't get data", 'wc_knet'),'error' );
+                    $order->add_order_note( __('Payment error:', 'woothemes') .  __("Knet can't get data", 'wc-knet'),'error' );
                     $order->update_status('failed');
                     return array(
                         'result' => 'error',
@@ -335,7 +340,7 @@ define("WC_STATUS_NEW","new");
                         "tran_id"=>$tranid,
                         "ref_id"=>$ref,
                         "result"=>$result,
-                        'status' => ($result == "CAPTURED") ? WC_STATUS_SUCCESS : WC_STATUS_FAIL,
+                        'status' => ($result == "CAPTURED") ? WC_PAYMENT_STATUS_SUCCESS : WC_PAYMENT_STATUS_FAIL,
                         "amount" => $resnopseData["ammount"],
                         "data" => $resnopseData["data"],
                         'error'=>$ErrorText,
@@ -343,7 +348,7 @@ define("WC_STATUS_NEW","new");
 
                     if(!$order->get_id())
                     {
-                        wc_add_notice( __("Order not found", "wc_knet"), 'error' );
+                        wc_add_notice( __("Order not found", "wc-knet"), 'error' );
                         return $order->get_view_order_url();
                     }
                     elseif(isset($status) && $status == "success")
@@ -366,11 +371,11 @@ define("WC_STATUS_NEW","new");
                                     break;
                             }
                             $knetInfomation = "";
-                            $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
-                            $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
-                            $knetInfomation.= __('track id', 'wc_knet')."         : $trackid\n";
-                            $knetInfomation.= __('Transaction id', 'wc_knet')."   : $tranid\n";
-                            $knetInfomation.= __('Refrance id', 'wc_knet')."      : $ref\n";
+                            $knetInfomation.= __('Result', 'wc-knet')."           : $result\n";
+                            $knetInfomation.= __('Payment id', 'wc-knet')."       : $paymentid\n";
+                            $knetInfomation.= __('track id', 'wc-knet')."         : $trackid\n";
+                            $knetInfomation.= __('Transaction id', 'wc-knet')."   : $tranid\n";
+                            $knetInfomation.= __('Refrance id', 'wc-knet')."      : $ref\n";
                             $order->add_order_note($knetInfomation);
 
                     }
@@ -379,13 +384,13 @@ define("WC_STATUS_NEW","new");
                             // insert transation
                             do_action("wc_knet_create_new_transation",$order,$transation_data);
                             $knetInfomation = "";
-                            $knetInfomation.= __('Result', 'wc_knet')."           : $result\n";
-                            $knetInfomation.= __('Payment id', 'wc_knet')."       : $paymentid\n";
-                            $knetInfomation.= __('track id', 'wc_knet')."         : $trackid\n";
-                            $knetInfomation.= __('Transaction id', 'wc_knet')."   : $tranid\n";
-                            $knetInfomation.= __('Refrance id', 'wc_knet')."      : $ref\n";
-                            $knetInfomation.= __('Error', 'wc_knet')."            : $Error\n";
-                            $knetInfomation.= __('Error Message', 'wc_knet')."    : $ErrorText\n";
+                            $knetInfomation.= __('Result', 'wc-knet')."           : $result\n";
+                            $knetInfomation.= __('Payment id', 'wc-knet')."       : $paymentid\n";
+                            $knetInfomation.= __('track id', 'wc-knet')."         : $trackid\n";
+                            $knetInfomation.= __('Transaction id', 'wc-knet')."   : $tranid\n";
+                            $knetInfomation.= __('Refrance id', 'wc-knet')."      : $ref\n";
+                            $knetInfomation.= __('Error', 'wc-knet')."            : $Error\n";
+                            $knetInfomation.= __('Error Message', 'wc-knet')."    : $ErrorText\n";
                             $order->add_order_note($knetInfomation);
                             $order->update_status('refunded');
 
@@ -522,7 +527,7 @@ define("WC_STATUS_NEW","new");
                     return $available_gateways;
                 }
                 if($this->is_test == "yes"){
-                    $available_gateways[$this->id]->title= $available_gateways[$this->id]->title. " <b style=\"color:red\">" .__("Test Mode","wc_knet")."</b>";
+                    $available_gateways[$this->id]->title= $available_gateways[$this->id]->title. " <b style=\"color:red\">" .__("Test Mode","wc-knet")."</b>";
                     $wp_get_current_user = wp_get_current_user();
                     if(isset($wp_get_current_user)){
                         if(!in_array("shop_manager",$wp_get_current_user->roles) && !in_array("administrator",$wp_get_current_user->roles)){
@@ -548,7 +553,8 @@ define("WC_STATUS_NEW","new");
                     return;
                 }
                 $output = $this->format_email($order,$knet_details,"knet-details.html");
-                echo $output;
+
+                echo wp_kses($output,$this->html_allow);
 
             }
 
@@ -571,7 +577,7 @@ define("WC_STATUS_NEW","new");
                 }else{
                     $output = $this->format_email($order,$knet_details,"emails/knet-html-details.html");
                 }
-                echo $output;
+                echo wp_kses($output, $this->html_allow);
             }
 
             /**
@@ -586,23 +592,23 @@ define("WC_STATUS_NEW","new");
                 $template = file_get_contents(plugin_dir_path(__FILE__).$template);
                 $replace = [
                     "{icon}"=> plugin_dir_url(__FILE__)."assets/knet-logo.png",
-                    "{title}" => __("Knet details","wc_knet"),
+                    "{title}" => __("Knet details","wc-knet"),
                     "{payment_id}" => ($knet_detials->payment_id) ? $knet_detials->payment_id : "---",
                     "{track_id}" => ($knet_detials->track_id) ? $knet_detials->track_id : "---",
                     "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
                     "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
                     "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
-                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y g:i a", strtotime($knet_detials->created_at) ) : "---",
+                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y", strtotime($knet_detials->created_at) ) : "---",
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace_lang = [
-                    "_lang(result)" => __("Result","wc_knet"),
-                    "_lang(payment_id)" => __("Payment id","wc_knet"),
-                    "_lang(trnac_id)" => __("Transaction id","wc_knet"),
-                    "_lang(track_id)" => __("Tracking id","wc_knet"),
-                    "_lang(amount)" => __("Amount","wc_knet"),
-                    "_lang(ref_id)" => __("Refrance id","wc_knet"),
-                    "_lang(created_at)" => __('Created at', "wc_knet"),
+                    "_lang(result)" => __("Result","wc-knet"),
+                    "_lang(payment_id)" => __("Payment id","wc-knet"),
+                    "_lang(trnac_id)" => __("Transaction id","wc-knet"),
+                    "_lang(track_id)" => __("Tracking id","wc-knet"),
+                    "_lang(amount)" => __("Amount","wc-knet"),
+                    "_lang(ref_id)" => __("Refrance id","wc-knet"),
+                    "_lang(created_at)" => __('Created at', "wc-knet"),
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace = array_merge($replace, $replace_lang);
@@ -618,7 +624,7 @@ define("WC_STATUS_NEW","new");
                 global  $id;
                 $order = $this->get_order_in_recived_page($id,true);
                 $order_status = $order->get_status();
-                return  sprintf("%s <b><span style=\"color:%s\">%s</span></b>.",__("Thank you. Your order has been","wc_knet"),$this->get_status_color($order_status),__(ucfirst($order_status),"woocommerce"));
+                return  sprintf("%s <b><span style=\"color:%s\">%s</span></b>.",__("Thank you. Your order has been","wc-knet"),$this->get_status_color($order_status),__(ucfirst($order_status),"woocommerce"));
             }
 
             /**
@@ -631,7 +637,7 @@ define("WC_STATUS_NEW","new");
                 $order_status = $this->get_order_in_recived_page($id);
 
                 if ( isset ( $order_status ) ) {
-                    return  sprintf( "%s , <b><span style=\"color:%s\">%s</span></b>",__('Order',"wc_knet"),$this->get_status_color($order_status), esc_html( __(ucfirst($order_status),"woocommerce")) );
+                    return  sprintf( "%s , <b><span style=\"color:%s\">%s</span></b>",__('Order',"wc-knet"),$this->get_status_color($order_status), esc_html( __(ucfirst($order_status),"woocommerce")) );
                 }
                 return $old_title;
             }
@@ -786,13 +792,16 @@ define("WC_STATUS_NEW","new");
      * @param $methods
      * @return mixed
      */
-    function woocommerce_add_wc_knet_gateway($methods) {
-        global $WC_KNET_CLASS_NAME;
+    if(!function_exists("woocommerce_add_wc_knet_gateway")){
+        function woocommerce_add_wc_knet_gateway($methods) {
+            global $WC_Payment_KNET_CLASS_NAME;
 
-        $methods[] = $WC_KNET_CLASS_NAME;
+            $methods[] = $WC_Payment_KNET_CLASS_NAME;
 
-        return $methods;
+            return $methods;
+        }
     }
+
     add_filter('woocommerce_payment_gateways', 'woocommerce_add_wc_knet_gateway' );
 
     /**
@@ -801,9 +810,12 @@ define("WC_STATUS_NEW","new");
      * @param $domain
      * @return string
      */
-    function wc_knet_load_textdomain() {
-        return load_plugin_textdomain( 'wc_knet', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+    if(!function_exists("wc_knet_load_textdomain")){
+        function wc_knet_load_textdomain() {
+            return load_plugin_textdomain( 'wc-knet', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+        }
     }
+
     add_action( 'plugins_loaded', 'wc_knet_load_textdomain' );
 
 
@@ -823,7 +835,7 @@ define("WC_STATUS_NEW","new");
 
         if( isset($request->query_vars['knetresponce']) && null !== sanitize_text_field($request->query_vars['knetresponce']) && sanitize_text_field($request->query_vars['knetresponce']) == "success")
         {
-            $WC_Gateway_Knet = new WC_Gateway_Knet();
+            $WC_Gateway_Knet = new WC_Payment_Gateway_Knet();
             $url = $WC_Gateway_Knet->updateOrder();
             
             if ( wp_redirect( $url ) )
@@ -841,8 +853,8 @@ define("WC_STATUS_NEW","new");
         $action = esc_attr($_GET["wc_knet_export"] ?? "");
         if(is_admin()){
             if(sanitize_text_field($action) == "excel"){
-                $rows = wc_knet_trans_grid::get_transations(1000);
-                $list[] =[__('Order', "wc_knet"), __('Status', "wc_knet"), __('Result', "wc_knet"), __('Amount', "wc_knet"), __('Payment id', "wc_knet"), __('Tracking id', "wc_knet"), __('Transaction id', "wc_knet"), __('Refrance id', "wc_knet"), __('Created at', "wc_knet") ];
+                $rows = wc_knet_payment_trans_grid::get_transations(1000);
+                $list[] =[__('Order', "wc-knet"), __('Status', "wc-knet"), __('Result', "wc-knet"), __('Amount', "wc-knet"), __('Payment id', "wc-knet"), __('Tracking id', "wc-knet"), __('Transaction id', "wc-knet"), __('Refrance id', "wc-knet"), __('Created at', "wc-knet") ];
                 if($rows){
                     foreach ($rows as $row){
                         $list[] = [$row['order_id'],__($row['status'],"wc_kent"),$row['result'],$row['amount'],$row['payment_id'],$row['track_id'],$row['tran_id'],$row['ref_id'],$row['created_at']];
@@ -853,12 +865,12 @@ define("WC_STATUS_NEW","new");
                 exit();
             }elseif (sanitize_text_field($action) == "csv"){
 
-                $rows = wc_knet_trans_grid::get_transations(1000);
+                $rows = wc_knet_payment_trans_grid::get_transations(1000);
                 if($rows){
                     $filename =  date('YmdHis') . ".csv";
                     $f = fopen('php://memory', 'w');
                     $delimiter = ",";
-                    $head = [__('Order', "wc_knet"), __('Status', "wc_knet"), __('Result', "wc_knet"), __('Amount', "wc_knet"), __('Payment id', "wc_knet"), __('Tracking id', "wc_knet"), __('Transaction id', "wc_knet"), __('Refrance id', "wc_knet"), __('Created at', "wc_knet") ];
+                    $head = [__('Order', "wc-knet"), __('Status', "wc-knet"), __('Result', "wc-knet"), __('Amount', "wc-knet"), __('Payment id', "wc-knet"), __('Tracking id', "wc-knet"), __('Transaction id', "wc-knet"), __('Refrance id', "wc-knet"), __('Created at', "wc-knet") ];
                     fputcsv($f, $head,$delimiter);
                     foreach ($rows as $row){
                         $listData = [$row['order_id'],__($row['status'],"wc_kent"),$row['result'],$row['amount'],$row['payment_id'],$row['track_id'],$row['tran_id'],$row['ref_id'],$row['created_at']];
@@ -881,14 +893,17 @@ define("WC_STATUS_NEW","new");
      * notify is currency not KWD
      */
     add_action('admin_notices', 'wc_knet_is_curnancy_not_kwd');
-    function wc_knet_is_curnancy_not_kwd(){
-        $currency = get_option('woocommerce_currency');
-        if(isset($currency) && $currency != "KWD"){
-            echo '<div class="notice notice-warning is-dismissible">
-             <p>'.__("currency must be KWD when using this knet payment","wc_knet").'</p>
+    if(!function_exists("wc_knet_is_curnancy_not_kwd")){
+        function wc_knet_is_curnancy_not_kwd(){
+            $currency = get_option('woocommerce_currency');
+            if(isset($currency) && $currency != "KWD"){
+                echo '<div class="notice notice-warning is-dismissible">
+             <p>'.__("currency must be KWD when using this knet payment","wc-knet").'</p>
          </div>';
+            }
         }
     }
+
 
 
 

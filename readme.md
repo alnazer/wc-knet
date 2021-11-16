@@ -2,10 +2,10 @@
 Contributors: hassan
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
-Tested up to: 5.8
+Tested up to: 5.8.2
 Tested in WooCommerce : 5.8
 Requires PHP: 7.0
-Stable tag: 2.2.1
+Stable tag: 2.3.1
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
 
@@ -42,7 +42,7 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 - only user has role [Shop manager,Administrator] allowed test payment other client cannot use gateway 
 - add exchange currency rate
 - transactions order by newest 
-  d
+ 
 = 2.2.1 =
 
 - fixed database create table error
@@ -79,4 +79,7 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 
 ## License
 
+##support
+contact info email: hassanaliksa@gmail.com
+ mobile : +96590033807
 [MIT](https://choosealicense.com/licenses/mit/)

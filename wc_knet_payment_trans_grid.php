@@ -4,7 +4,7 @@ if(!class_exists('WP_List_Table')){
     require_once( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 }
 
-class wc_knet_trans_grid extends WP_List_Table
+class wc_knet_payment_trans_grid extends WP_List_Table
 {
     public $table;
     public $db;
@@ -12,13 +12,13 @@ class wc_knet_trans_grid extends WP_List_Table
     {
         global $wpdb;
         parent::__construct( [
-            'singular' => __( 'WC_Knet_List', "wc_knet" ), //singular name of the listed records
-            'plural' => __( 'WC_Knet_List', "wc_knet" ), //plural name of the listed records
+            'singular' => __( 'WC_Knet_List', "wc-knet" ), //singular name of the listed records
+            'plural' => __( 'WC_Knet_List', "wc-knet" ), //plural name of the listed records
             'ajax' => false //should this table support ajax?
 
         ]);
         $this->db = $wpdb;
-        $this->table = $this->db->prefix.WC_KNET_TABLE;
+        $this->table = $this->db->prefix.WC_PAYMENT_KNET_TABLE;
     }
 
 
@@ -75,7 +75,7 @@ class wc_knet_trans_grid extends WP_List_Table
         ?>
         <p class="search-box">
         <form action="admin.php" method="get">
-            <input type="hidden" name="page"  value="<?php echo $_REQUEST['page']; ?>"/>
+            <input type="hidden" name="page"  value="<?php echo esc_attr($_REQUEST['page']); ?>"/>
             <?php
             if ( ! empty( $_REQUEST['orderby'] ) ) {
                 echo '<input type="hidden" name="orderby" value="' . esc_attr( $_REQUEST['orderby'] ) . '" />';
@@ -92,52 +92,52 @@ class wc_knet_trans_grid extends WP_List_Table
             
             ?>
             <div class="wc-knet-field">
-                <label for="order_id"><?php  echo __('Order', "wc_knet") ?></label>
-                <input type="search" id="order_id" name="order_id" value="<?php echo esc_attr($_REQUEST['order_id'] ?? ""); ?>" placeholder="<?php  echo __('Order', "wc_knet") ?>" />
+                <label for="order_id"><?php  echo __('Order', "wc-knet") ?></label>
+                <input type="search" id="order_id" name="order_id" value="<?php echo esc_attr($_REQUEST['order_id'] ?? ""); ?>" placeholder="<?php  echo __('Order', "wc-knet") ?>" />
             </div>
 
             <div class="wc-knet-field">
-                <label for="status"><?php  echo __('Status', "wc_knet") ?></label>
+                <label for="status"><?php  echo __('Status', "wc-knet") ?></label>
                 <select name="status" id="status">
-                    <option value=""><?php echo __('Status', "wc_knet") ?></option>
-                    <option value="fail" <?php echo (isset($_REQUEST["status"]) && $_REQUEST["status"] =="fail") ? "selected" : "" ?>><?php echo __('Fail', "wc_knet") ?></option>
-                    <option value="success" <?php echo (isset($_REQUEST["status"]) && $_REQUEST["status"] =="success") ? "selected" : "" ?>><?php echo __('Success', "wc_knet") ?></option>
+                    <option value=""><?php echo __('Status', "wc-knet") ?></option>
+                    <option value="fail" <?php echo (isset($_REQUEST["status"]) && $_REQUEST["status"] =="fail") ? "selected" : "" ?>><?php echo __('Fail', "wc-knet") ?></option>
+                    <option value="success" <?php echo (isset($_REQUEST["status"]) && $_REQUEST["status"] =="success") ? "selected" : "" ?>><?php echo __('Success', "wc-knet") ?></option>
                 </select>
             </div>
             <div class="wc-knet-field">
-                <label for="result"><?php  echo __('Result', "wc_knet") ?></label>
-                <input type="search" id="result" name="result" value="<?php  echo esc_attr($_REQUEST['result'] ?? ""); ?>" placeholder="<?php  echo __('Result', "wc_knet") ?>" />
+                <label for="result"><?php  echo __('Result', "wc-knet") ?></label>
+                <input type="search" id="result" name="result" value="<?php  echo esc_attr($_REQUEST['result'] ?? ""); ?>" placeholder="<?php  echo __('Result', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="amount"><?php  echo __('Amount', "wc_knet") ?></label>
-                <input type="search" id="amount" name="amount" value="<?php  echo esc_attr($_REQUEST['amount'] ?? ""); ?>" placeholder="<?php  echo __('amount', "wc_knet") ?>" />
+                <label for="amount"><?php  echo __('Amount', "wc-knet") ?></label>
+                <input type="search" id="amount" name="amount" value="<?php  echo esc_attr($_REQUEST['amount'] ?? ""); ?>" placeholder="<?php  echo __('amount', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="payment_id"><?php  echo __('Payment id', "wc_knet") ?></label>
-                <input type="search" id="payment_id" name="payment_id" value="<?php  echo esc_attr($_REQUEST['payment_id'] ?? ""); ?>" placeholder="<?php  echo __('Payment id', "wc_knet") ?>" />
+                <label for="payment_id"><?php  echo __('Payment id', "wc-knet") ?></label>
+                <input type="search" id="payment_id" name="payment_id" value="<?php  echo esc_attr($_REQUEST['payment_id'] ?? ""); ?>" placeholder="<?php  echo __('Payment id', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="track_id"><?php  echo __('Tracking id', "wc_knet") ?></label>
-                <input type="search" id="track_id" name="track_id" value="<?php  echo esc_attr($_REQUEST['track_id'] ?? ""); ?>" placeholder="<?php  echo __('Tracking id', "wc_knet") ?>" />
+                <label for="track_id"><?php  echo __('Tracking id', "wc-knet") ?></label>
+                <input type="search" id="track_id" name="track_id" value="<?php  echo esc_attr($_REQUEST['track_id'] ?? ""); ?>" placeholder="<?php  echo __('Tracking id', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="tran_id"><?php  echo __('Transaction id', "wc_knet") ?></label>
-                <input type="search" id="tran_id" name="tran_id" value="<?php  echo esc_attr($_REQUEST['tran_id'] ?? ""); ?>" placeholder="<?php  echo __('Transaction id', "wc_knet") ?>" />
+                <label for="tran_id"><?php  echo __('Transaction id', "wc-knet") ?></label>
+                <input type="search" id="tran_id" name="tran_id" value="<?php  echo esc_attr($_REQUEST['tran_id'] ?? ""); ?>" placeholder="<?php  echo __('Transaction id', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="ref_id"><?php  echo __('Refrance id', "wc_knet") ?></label>
-                <input type="search" id="ref_id" name="ref_id" value="<?php  echo esc_attr($_REQUEST['ref_id'] ?? ""); ?>" placeholder="<?php  echo __('Refrance id', "wc_knet") ?>" />
+                <label for="ref_id"><?php  echo __('Refrance id', "wc-knet") ?></label>
+                <input type="search" id="ref_id" name="ref_id" value="<?php  echo esc_attr($_REQUEST['ref_id'] ?? ""); ?>" placeholder="<?php  echo __('Refrance id', "wc-knet") ?>" />
             </div>
             <div class="wc-knet-field">
-                <label for="created_at"><?php  echo __('Created at', "wc_knet") ?></label>
-                <input type="date" id="created_at" name="created_at" value="<?php  echo esc_attr($_REQUEST['created_at'] ?? ""); ?>" placeholder="<?php  echo __('Created at', "wc_knet") ?>" />
+                <label for="created_at"><?php  echo __('Created at', "wc-knet") ?></label>
+                <input type="date" id="created_at" name="created_at" value="<?php  echo esc_attr($_REQUEST['created_at'] ?? ""); ?>" placeholder="<?php  echo __('Created at', "wc-knet") ?>" />
             </div>
             <div>
                 <?php submit_button( $text, 'submit', '', false, array( 'id' => 'search-submit' ) ); ?>
-                <a class="button reset" href="admin.php?page=<?php echo $_REQUEST['page'] ?? ""; ?>"><?php  echo __('Reset', "wc_knet") ?></a>
+                <a class="button reset" href="admin.php?page=<?php echo esc_attr($_REQUEST['page']) ?? ""; ?>"><?php  echo __('Reset', "wc-knet") ?></a>
                 <?php $http_build_query = $_GET; unset($http_build_query["page"])  ?>
-                <a class="button reset" href="admin.php?page=<?php echo $_REQUEST['page'] ?? ""; ?>&wc_knet_export=excel&<?php echo http_build_query($http_build_query) ?>"><?php  echo __('Export excel', "wc_knet") ?></a>
-                <a class="button reset" href="admin.php?page=<?php echo $_REQUEST['page'] ?? ""; ?>&wc_knet_export=csv&<?php echo http_build_query($http_build_query) ?>"><?php  echo __('Export csv', "wc_knet") ?></a>
+                <a class="button reset" href="admin.php?page=<?php echo esc_attr($_REQUEST['page']) ?? ""; ?>&wc_knet_export=excel&<?php echo http_build_query($http_build_query) ?>"><?php  echo __('Export excel', "wc-knet") ?></a>
+                <a class="button reset" href="admin.php?page=<?php echo esc_attr($_REQUEST['page']) ?? ""; ?>&wc_knet_export=csv&<?php echo http_build_query($http_build_query) ?>"><?php  echo __('Export csv', "wc-knet") ?></a>
             </div>
 
         </form>
@@ -158,20 +158,20 @@ class wc_knet_trans_grid extends WP_List_Table
         <?php
     }
     public function no_items() {
-        _e( 'No Transations avaliable.',  "wc_knet" );
+        _e( 'No Transations avaliable.',  "wc-knet" );
     }
     public function get_columns()
     {
             return $columns= array(
-                'order_id'=>__('Order', "wc_knet"),
-                'status'=>__('Status', "wc_knet"),
-                'result'=>__('Result', "wc_knet"),
-                'amount'=>__('Amount', "wc_knet"),
-                'payment_id'=>__('Payment id', "wc_knet"),
-                'track_id'=>__('Tracking id', "wc_knet"),
-                'tran_id'=>__('Transaction id', "wc_knet"),
-                'ref_id'=>__('Refrance id', "wc_knet"),
-                'created_at'=>__('Created at', "wc_knet"),
+                'order_id'=>__('Order', "wc-knet"),
+                'status'=>__('Status', "wc-knet"),
+                'result'=>__('Result', "wc-knet"),
+                'amount'=>__('Amount', "wc-knet"),
+                'payment_id'=>__('Payment id', "wc-knet"),
+                'track_id'=>__('Tracking id', "wc-knet"),
+                'tran_id'=>__('Transaction id', "wc-knet"),
+                'ref_id'=>__('Refrance id', "wc-knet"),
+                'created_at'=>__('Created at', "wc-knet"),
             );
     }
 
@@ -201,7 +201,7 @@ class wc_knet_trans_grid extends WP_List_Table
             case 'order_id':
                 return sprintf("<a href='%s' target='_blank'>#%s</a>",get_edit_post_link($item[$column_name]),$item[$column_name]);
             case 'status':
-               return ($item[$column_name] == "fail") ? sprintf("<span  style='color:red'>%s</span>",__($item[ $column_name ],"wc_knet")) : sprintf("<span  style='color:green'>%s</span>",__($item[ $column_name ],"wc_knet"));
+               return ($item[$column_name] == "fail") ? sprintf("<span  style='color:red'>%s</span>",__($item[ $column_name ],"wc-knet")) : sprintf("<span  style='color:green'>%s</span>",__($item[ $column_name ],"wc-knet"));
             case 'result':
                 return ($item[$column_name] != "CAPTURED") ? sprintf("<span style='color:red'>%s</span>",$item[ $column_name ]) : sprintf("<span  style='color:green'>%s</span>",$item[ $column_name ]);
             default:
@@ -241,11 +241,12 @@ class wc_knet_trans_grid extends WP_List_Table
     public static function get_transations($per_page, $page_number = 1)
     {
 
+
         $sql = "SELECT * FROM ".(new self)->table." WHERE 1=1 ".(new self)->filter_query();
 
         if ( ! empty( $_REQUEST['orderby'] ) ) {
-            $sql .= ' ORDER BY ' . esc_sql( $_REQUEST['orderby'] );
-            $sql .= ! empty( $_REQUEST['order'] ) ? ' ' . esc_sql( $_REQUEST['order'] ) : ' ASC';
+            $sql .= ' ORDER BY ' . sanitize_text_field( $_REQUEST['orderby'] );
+            $sql .= ! empty( $_REQUEST['order'] ) ? ' ' . sanitize_text_field( $_REQUEST['order'] ) : ' ASC';
         }else{
             $sql .= " ORDER BY `id` DESC ";
         }
@@ -260,7 +261,7 @@ class wc_knet_trans_grid extends WP_List_Table
     }
 }
 
-class WC_KNET_Plugin
+class WC_KNET_PAYMENT_Plugin
 {
 
 // class instance
@@ -301,14 +302,14 @@ class WC_KNET_Plugin
 
         add_screen_option( $option, $args );
 
-        $this->transations_obj = new wc_knet_trans_grid();
+        $this->transations_obj = new wc_knet_payment_trans_grid();
     }
     public function plugin_menu() {
 
         $hook =add_submenu_page(
             'woocommerce',
-            __( 'Knet transactions', 'wc_knet' ),
-            __( 'Knet transactions', 'wc_knet' ),
+            __( 'Knet transactions', 'wc-knet' ),
+            __( 'Knet transactions', 'wc-knet' ),
             'manage_woocommerce',
             "wc-knet-transactions",
             [ $this, 'plugin_settings_page' ],
@@ -324,7 +325,7 @@ class WC_KNET_Plugin
     public function plugin_settings_page() {
         ?>
         <div class="wrap">
-            <h2><?php echo __( 'Knet transactions', 'wc_knet' ) ?></h2>
+            <h2><?php echo __( 'Knet transactions', 'wc-knet' ) ?></h2>
 
             <div style="display: flex;gap: 3rem;">
 
@@ -340,7 +341,7 @@ class WC_KNET_Plugin
                     </div>
                 </div>
                 <div id="post-body" class="metabox-holder columns-2">
-                    <?php $this->transations_obj->search_box(_e( 'Filter', 'wc_knet' ), "wc_knet_filter") ?>
+                    <?php $this->transations_obj->search_box(_e( 'Filter', 'wc-knet' ), "wc_knet_filter") ?>
                 </div>
             </div>
         </div>
