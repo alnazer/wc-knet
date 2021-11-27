@@ -4,7 +4,7 @@
 *Plugin URI: https://github.com/alnazer/woocommerce-payment-kent-v2
 *Description: The new update of the K-Net payment gateway via woocommerce paymemt.
 *Author: alnazer
-*Version: 2.3.2
+*Version: 2.3.3
 *Author URI: https://github.com/alnazer
 *Text Domain: wc-knet
 * Domain Path: /languages
@@ -771,7 +771,10 @@ define("WC_PAYMENT_STATUS_NEW","new");
              */
             public function pkcs5_unpad($text)
             {
-                $pad = ord($text{strlen($text)-1});
+
+                $index = (strlen($text)-1);
+                $pad = ord($text[$index]);
+
                 if ($pad > strlen($text)) {
                     return false;	
                 }

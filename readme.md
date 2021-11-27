@@ -5,7 +5,7 @@ Requires at least: 5.6
 Tested up to: 5.8.2
 Tested in WooCommerce : 5.8
 Requires PHP: 7.0
-Stable tag: 2.3.2
+Stable tag: 2.3.3
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
 
@@ -38,6 +38,10 @@ go to woocommerce setting in side menu and select tab payment and active knet v2
 ## Changelog
 
 == Changelog ==
+= 2.3.3 =
+
+-fixed error in php 8 
+
 = 2.3.1 =
 
 - add language payment page in plugin options
