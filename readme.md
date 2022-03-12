@@ -3,7 +3,7 @@ Contributors: alnazer
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
 Tested up to: 5.9
-Tested in WooCommerce : 6.2.0
+Tested in WooCommerce : 6.3.1
 Requires PHP: 7.0
 Stable tag: 2.4.0
 License: MIT

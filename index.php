@@ -317,7 +317,7 @@ define("WC_PAYMENT_STATUS_NEW","new");
                 $replace_array['{lang}'] = $this->lang;
                 $replace_array['{udf1}'] = $order->get_id();
                 $replace_array['{udf2}'] = $this->name;
-                $replace_array['{udf3}'] = $this->email;
+                $replace_array['{udf3}'] = $this->mobile;
                 if(isset($this->is_kfast) && $this->is_kfast == 'yes' && isset($user_id) && !empty($user_id) && strlen($user_id) <= 8){
                     $replace_array['{udf3}'] = $this->getUserKfastToken($user_id);
                 }
