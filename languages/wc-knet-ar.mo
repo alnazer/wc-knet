@@ -116,7 +116,11 @@ msgid "Knet details"
 msgstr "بيانات عملية الكي نت"
 
 msgid "Place the payment gateway in test mode using test. only this user roles [Shop manager,Administrator] can test payment"
-msgstr "ضع بوابة الدفع في وضع الاختبار باستخدام مفاتيح اختبار  يمكن لأدوار هذا المستخدم فقط [مدير متجر ، مدير] اختبار الدفع "
+msgstr "ضع بوابة الدفع في وضع الاختبار باستخدام مفاتيح اختبار  يمكن لأدوار هذا المستخدم فقط [مدير متجر ، مدير] اختبار الدفع"
+
+msgid "The KFAST feature may not work with all customers because you allow non-customers to make payments"
+msgstr "قد لا تعمل خاصية الكي فاست مع كل العملاء لانك تسمح لغير العملاء باجراء عمليات الدفع"
+
 
 
 

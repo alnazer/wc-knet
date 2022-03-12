@@ -2,10 +2,10 @@
 Contributors: alnazer
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
-Tested up to: 5.8.2
-Tested in WooCommerce : 5.8
+Tested up to: 5.9
+Tested in WooCommerce : 6.2.0
 Requires PHP: 7.0
-Stable tag: 2.3.3
+Stable tag: 2.4.0
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
 
@@ -35,9 +35,29 @@ From merchant’s WordPress admin
 
 go to woocommerce setting in side menu and select tab payment and active knet v2 from list
 
+## TEST
+Cards
+```
+- Captured (Approved) Card Number: 8888880000000001
+    Expiry: 09/2025
+    Pin: Any Pin
+
+- Not Captured (Declined) Card Number: 8888880000000001
+    Expiry: Any Expiry
+    Pin: Any Pin
+```
+
+## KFAST
+
+To apply KFAST you must contact to KNET support to approved KFAST to your account
+
 ## Changelog
 
 == Changelog ==
+= 2.4.0 =
+
+- add KFAST feature
+
 = 2.3.3 =
 
 -fixed error in php 8 

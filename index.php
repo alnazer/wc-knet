@@ -1,17 +1,18 @@
 <?php
 /*
 *Plugin Name: Payment Gateway for KNET
-*Plugin URI: https://github.com/alnazer/woocommerce-payment-kent-v2
+*Plugin URI: https://github.com/alnazer/wc-knet
 *Description: The new update of the K-Net payment gateway via woocommerce paymemt.
 *Author: alnazer
-*Version: 2.3.3
+*Version: 2.4.0
 *Author URI: https://github.com/alnazer
 *Text Domain: wc-knet
 * Domain Path: /languages
 */
 /**
- * @package wc KNET woocommerce
+ * @package WC KNET woocommerce
 */
+
 defined( 'ABSPATH' ) || exit;
 define("WC_PAYMENT_KNET_TABLE","wc_knet_transactions");
 define("WC_PAYMENT_KNET_DV_VERSION","1.1");
@@ -50,7 +51,7 @@ define("WC_PAYMENT_STATUS_NEW","new");
      */
         class WC_Payment_Gateway_KNET extends WC_Payment_Gateway {
 
-
+            private $kfast_token_key = "kfast_token";
             private $exchange;
             private $currency;
             private $tranportal_id;
@@ -65,6 +66,7 @@ define("WC_PAYMENT_STATUS_NEW","new");
             private $responseURL;
             private $errorURL;
             public $is_test;
+            public $is_kfast;
             public $lang = "AR";
             private $html_allow = array( 'h2' => array("class"=>array(),"style"=>array()),"span"=>array("style"=>array()), 'table' => array("class"=>array()),'tr' => array(), 'th' => array(), 'td' => array(),'b' => array(),'br' => array(), 'img' => array(
                 "src"=>array(),
@@ -91,6 +93,8 @@ define("WC_PAYMENT_STATUS_NEW","new");
                 $this->resource_key = $this->get_option('resource_key');
                 $this->lang = $this->get_option('lang');
                 $this->is_test = $this->get_option('is_test');
+                $this->is_kfast = $this->get_option('is_kfast');
+
                 if($this->is_test == "no")
                 {
                     $this->GatewayUrl = "https://kpay.com.kw/";
@@ -138,6 +142,14 @@ define("WC_PAYMENT_STATUS_NEW","new");
                         'description' => __("Place the payment gateway in test mode using test. only this user roles [Shop manager,Administrator] can test payment","wc-knet"),
                         'default'     => 'no',
                         'desc_tip'    => false,
+                    ),
+                    'is_kfast' => array(
+                        'title'       => 'KFAST',
+                        'label'       => 'Enable KFAST',
+                        'type'        => 'checkbox',
+                        'description' => __("KFAST is a new feature, affiliated with KNET Payment Gateway, by which the customer can save their card(s) details, enabling them to carry out any future transactions with the same merchant, in a speedy manner, by only having to enter their PIN when prompted.","wc-knet"),
+                        'default'     => 'no',
+                        'desc_tip'    => true,
                     ),
                     'title' => array(
                         'title' => __( 'Title', 'woocommerce' ),
@@ -305,9 +317,12 @@ define("WC_PAYMENT_STATUS_NEW","new");
                 $replace_array['{lang}'] = $this->lang;
                 $replace_array['{udf1}'] = $order->get_id();
                 $replace_array['{udf2}'] = $this->name;
-                $replace_array['{udf3}'] =$this->email;
+                $replace_array['{udf3}'] = $this->email;
+                if(isset($this->is_kfast) && $this->is_kfast == 'yes' && isset($user_id) && !empty($user_id) && strlen($user_id) <= 8){
+                    $replace_array['{udf3}'] = $this->getUserKfastToken($user_id);
+                }
                 $replace_array['{udf4}'] = $this->mobile;
-                $replace_array['{udf5}'] = '';
+                $replace_array['{udf5}'] = $this->email;
                 $this->paymentUrl = str_replace(array_keys($replace_array),array_values($replace_array),$this->paymentUrl);
             }
 
@@ -515,7 +530,16 @@ define("WC_PAYMENT_STATUS_NEW","new");
                 return $order->get_total();
 
             }
-
+            
+            /**
+             * get is kfast by static method
+             * @param none
+             * @return string
+             */
+            public static function get_is_kfast()
+            {
+                return (new self)->is_kfast;
+            }
             /**
              * hide gateways in test mode
              * @param $available_gateways
@@ -687,8 +711,35 @@ define("WC_PAYMENT_STATUS_NEW","new");
                         return "#fb0404";
                 }
             }
+            /**
+             * generate kfast token
+             */
+            private function generateUserKfastToken($length = 8)
+            {
+                return str_pad(mt_rand(1,99999999),$length,'0',STR_PAD_LEFT);
+            }
 
+            private function getUserKfastToken($user_id)
+            {
+                $userToken = get_user_meta( $user_id, $this->kfast_token_key,true);
+                if(isset($userToken) && !empty($userToken) && is_numeric($userToken)){
+                    return $userToken;
+                }
+                $userToken = $this->generateUserKfastToken();
+                while($this->isKfateExiste($userToken)){
+                    $userToken = $this->generateUserKfastToken();
+                }
+                add_user_meta($user_id,$this->kfast_token_key,$userToken,true);
+                return $userToken;
+            }
+            private function isKfateExiste($value)
+            {
+                global $wpdb;
+                $table = $wpdb->prefix.'usermeta';
+                return $wpdb->get_var("SELECT COUNT(*) FROM `$table` WHERE `meta_key`='$this->kfast_token_key' AND `meta_value`=$value  ");
+            }
 
+            
             /** ======== Payment Encrypt Functions Started ======
              * this functions created by knet devolper don't change any thing
             */
@@ -907,6 +958,21 @@ define("WC_PAYMENT_STATUS_NEW","new");
         }
     }
 
+    /** notify is gust can add checkout */
+    add_action('admin_notices', 'wc_kfast_guest_can_checkout');
+    if(!function_exists("wc_kfast_guest_can_checkout")){
+        function wc_kfast_guest_can_checkout(){
+            $guest_checkout = get_option('woocommerce_enable_guest_checkout');
+            if(isset($guest_checkout) && $guest_checkout == "yes"){
+                if(WC_Payment_Gateway_Knet::get_is_kfast() == "yes"){
+                    echo '<div class="notice notice-warning is-dismissible">
+                        <p>'.__("The KFAST feature may not work with all customers because you allow non-customers to make payments","wc-knet").'</p>
+                    </div>';
+                }
+                
+            }
+        }
+    }
 
 
 
