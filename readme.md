@@ -5,11 +5,9 @@ Requires at least: 5.6
 Tested up to: 5.9
 Tested in WooCommerce : 6.3.1
 Requires PHP: 7.0
-Stable tag: 2.4.0
+Stable tag: 2.5.0
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
-
-
 
 نساعدك في تطوير اعمالك الخاصه بتقديم الاضافة الجديد
 الخاصة بالدفع عن طريق بوابة الكي نت بعد تحديثها
@@ -22,7 +20,6 @@ Expand your customers' circle by making the payment available via Knet
 ## Installation
 
 download and unzip to plugins folder
-<br/>
 or
 From merchant’s WordPress admin
 
@@ -35,40 +32,82 @@ From merchant’s WordPress admin
 
 go to woocommerce setting in side menu and select tab payment and active knet v2 from list
 
-## TEST
-Cards
-```
-- Captured (Approved) Card Number: 8888880000000001
-    Expiry: 09/2025
-    Pin: Any Pin
+## Test Cards
 
-- Not Captured (Declined) Card Number: 8888880000000001
-    Expiry: Any Expiry
-    Pin: Any Pin
-```
+Captured (Approved)
+Card Number : 8888880000000001
+Expiry : 09/2025
+Pin : Any Pin
 
-## KFAST
+Not Captured (Declined)
+Card Number : 8888880000000001
+Expiry : Any Expiry
+Pin : Any Pin
 
-To apply KFAST you must contact to KNET support to approved KFAST to your account
+
+## خطوات التسجيل في خدمة الدفع اون لاين (KNET)
+[KNET WEBSITE](https://www.knet.com.kw/)
+### التسجيل والاختبار
+> يتم تفعيل خدمة الكي نت للدفع اون لاين من خلال التوجة الي البنك المسجلة فية حسابك البنكي
+
+
+1. عليك التوجة الي البنك التابع له حسابك البنكي (مؤسسات)
+2. بعد الاتفاق وتوقيع العقود ستصلك رسالة علي البريد الالكتروني المسجل في العقد تحتوي علي نموذج بطلب بعض البيانات
+3. ياتي النموذج ملف ورد قم بتعبئة البيانات (عبارة عن بيانات خاصة بالبرمجة المستخدمة وبيانات التواصل الخاصة بالمحاسب ومطور الموقع)
+4. سيتم الرد  علي بريد المطور ببيانات التست (الاختبارية)
+5. قم بضافتها في البلج ان وفعل خاصية test mode
+6. قم بتجربة الدفع بالبيانات الاختبارية الموجودة في دليل الاستخدام هذا تحت بند CARDS
+7. بعد نجاح عملية الربط تواصل مع فريق الدعم الفني بالكي نت لطلب بيانات التفعيل (live)
+
+> بريد المطور هو البريد الوحيد المعتمد في المراسلات بالنسبة لفريق التطوير في الكي نت 
+
+> احرص دائما علي استخدام بريد رسمي لمؤسستك وليس بريد شخصي
+
+### التفعيل
+1.سيقوم فريق الدعم الفني  للكي نت بالرد علي بريدك بطلب بعض البيانات للتاكد من الربط بصورة سليمة قم بتجهيزها وارفاقها في رد علي نفس البريد
+> قم بضغطهم في ملف واحرص علي ترتيبهم بشكل صحيح
+
+وهم
+	```
+	a- لقطة لشاشة صفحة عرض المنتج
+	b- لقطة لشاشة سلة المشتريات (ان وجدت)
+	c- لقطة لشاشة صفحة تاكيد الدفع
+	d- لقطة لشاشة نتيجة عملية الدفع (في حالة النجاح والفشل)
+	e- لقطة لشاشة البريد الالكتروني المرسل للمشتري (في حالة النجاح والفشل)
+	f- سجل العمليات (قم بتصدير ملف اكسل لعمليات الكي نت)
+	```
+2. اذا تمت الربط بصورة صحيحة سيقومفريق الدعم الفني بالرد عليك برسالة بها بيانات الربط الفعلية للدفع اون لاين
+3. قم باستبدال بيانات الربط الجديدة بالبيانات القديمة (الاختبارية)
+4. لاتنسي الغاء خاصية test mode
+5. ابدا حملتك التسويقية وابدا في جنى الأرباح
+5. لاتنسونا من دعائكم
+
 
 ## Changelog
 
 == Changelog ==
+
+=== 2.5.0 ===
+
+1. add commission
+2. Display commission to payment method description
+
+
 = 2.4.0 =
 
 - add KFAST feature
 
 = 2.3.3 =
 
--fixed error in php 8 
+-fixed error in php 8
 
 = 2.3.1 =
 
 - add language payment page in plugin options
-- only user has role [Shop manager,Administrator] allowed test payment other client cannot use gateway 
+- only user has role [Shop manager,Administrator] allowed test payment other client cannot use gateway
 - add exchange currency rate
-- transactions order by newest 
- 
+- transactions order by newest
+
 = 2.2.1 =
 
 - fixed database create table error
@@ -102,9 +141,15 @@ To apply KFAST you must contact to KNET support to approved KFAST to your accoun
 * ![#04c1fb](https://via.placeholder.com/15/0470fb/000000?text=+) `on-hold`
 * ![#green](https://via.placeholder.com/15/green/000000?text=+) `completed`
 * ![#fb0404](https://via.placeholder.com/15/fb0404/000000?text=+) `cancelled,refunded,failed`
+
+## kfast
+
+To apply KFAST you must contact to KNET support to approved KFAST to your account
+
 ## support
+
 contact info email: hassanaliksa@gmail.com
- mobile : +96590033807
+mobile : +96590033807
 
 ## License
 
