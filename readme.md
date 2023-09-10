@@ -48,7 +48,7 @@ Pin : Any Pin
 
 [KNET WEBSITE](https://www.knet.com.kw/)
 
-### للمشتركين في خدمة الكي نت بعد 4/9/2023 الرجاء تفعيل خاصية Enable KNET REDIRECT page
+[!IMPORTANT]للمشتركين في خدمة الكي نت بعد 4/9/2023 الرجاء تفعيل خاصية Enable KNET REDIRECT page
 
 ### التسجيل والاختبار
 
