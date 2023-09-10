@@ -2,10 +2,10 @@
 Contributors: alnazer
 Tags: K-Net, knet, knetv2, payment, kuwait, woocommerce, ecommerce, payment, gateway
 Requires at least: 5.6
-Tested up to: 6.2-beta3-55402
-Tested in WooCommerce : 7.4.1
+Tested up to: 6.3.1
+Tested in WooCommerce : 8.0.3
 Requires PHP: 7.0
-Stable tag: 2.8.0
+Stable tag: 2.10.0
 License: MIT
 License URI: https://choosealicense.com/licenses/mit/
 
@@ -48,6 +48,8 @@ Pin : Any Pin
 
 [KNET WEBSITE](https://www.knet.com.kw/)
 
+### للمشتركين في خدمة الكي نت بعد 4/9/2023 الرجاء تفعيل خاصية Enable KNET REDIRECT page
+
 ### التسجيل والاختبار
 
 > يتم تفعيل خدمة الكي نت للدفع اون لاين من خلال التوجة الي البنك المسجلة فية حسابك البنكي
@@ -76,6 +78,15 @@ Pin : Any Pin
 ## Changelog
 
 == Changelog ==
+
+=== 2.10.0 ===
+
+1. add new option (REDIRECT response page) for new KNET update
+
+=== 2.9.0 ===
+
+1. now you can choose which state of order when customer start call payment gateway
+
 
 === 2.8.0 ===
 
