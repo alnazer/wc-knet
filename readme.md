@@ -47,9 +47,8 @@ Pin : Any Pin
 ## خطوات التسجيل في خدمة الدفع اون لاين (KNET)
 
 [KNET WEBSITE](https://www.knet.com.kw/)
-
-**ℹ️ Information**
-للمشتركين في خدمة الكي نت بعد 4/9/2023 الرجاء تفعيل خاصية Enable KNET REDIRECT page
+> **ملحوظة **
+> للمشتركين في خدمة الكي نت بعد 4/9/2023 الرجاء تفعيل خاصية Enable KNET REDIRECT page
 
 ### التسجيل والاختبار
 
