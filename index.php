@@ -388,9 +388,10 @@
                 $user_id = $order->get_user_id();
                 $user_info = $order->get_user();
                 
-                $formatted_billing_full_name = $order->get_formatted_billing_full_name();
+                $formatted_billing_full_name = $order->get_billing_first_name();
                 $this->name = (!empty($formatted_billing_full_name)) ? $formatted_billing_full_name : (($user_id && $user_info) ? $user_info->user_login : "");
-                
+                $this->name = trim($this->name);
+		$this->name = (!preg_match('/[^A-Za-z0-9]/', $this->name))? $this->name : "";
                 $billing_email = $order->get_billing_email();
                 $this->email = (!empty($billing_email)) ? $billing_email : (($user_id && $user_info) ? $user_info->user_email : "");
                 
@@ -400,7 +401,7 @@
                 
                 $this->trackId = time() . mt_rand(1000, 100000);
                 $replace_array = array();
-                $replace_array['{id}'] = $this->tranportal_id . $order->get_formatted_billing_full_name();
+                $replace_array['{id}'] = $this->tranportal_id;
                 $replace_array['{password}'] = $this->password;
                 $replace_array['{amt}'] = $this->getTotalAmount($order);
                 $replace_array['{trackid}'] = $this->trackId;
