@@ -388,9 +388,8 @@
                 $user_id = $order->get_user_id();
                 $user_info = $order->get_user();
                 
-                $formatted_billing_full_name = $order->get_billing_first_name();
-                $this->name = (!empty($formatted_billing_full_name)) ? $formatted_billing_full_name : (($user_id && $user_info) ? $user_info->user_login : "");
-                $this->name = trim($this->name);
+                $get_billing_first_name = $order->get_billing_first_name();
+                $this->name = (!empty($get_billing_first_name)) ? trim($get_billing_first_name) : (($user_id && $user_info) ? trim($user_info->user_login) : "");
 		$this->name = (!preg_match('/[^A-Za-z0-9]/', $this->name))? $this->name : "";
                 $billing_email = $order->get_billing_email();
                 $this->email = (!empty($billing_email)) ? $billing_email : (($user_id && $user_info) ? $user_info->user_email : "");
