@@ -4,7 +4,7 @@
     *Plugin URI: https://github.com/alnazer/wc-knet
     *Description: The new update of the K-Net payment gateway via woocommerce payment.
     *Author: alnazer
-    *Version: 2.10.0
+    *Version: 2.11.0
     *Author URI: https://github.com/alnazer
     *Text Domain: wc-knet
     * Domain Path: /languages
@@ -77,6 +77,10 @@
              * @since 2.10.0
              */
             public $is_redirect_mode;
+            /**
+            * @since 2.11.0
+            */
+            public $logo = 'knet-logo.png';
             public $is_kfast;
             public $lang = "AR";
             private $complete_order_status;
@@ -96,8 +100,10 @@
                     "alt" => array()
                 )
             );
-            
-            
+            /**
+            * @since 2.11.0
+            */
+            private $upload_dir = 'assets/';
             /**
              *
              */
@@ -105,6 +111,8 @@
             {
                 
                 $this->init_gateway();
+                $this->logo = $this->get_option('logo');
+                $this->getGatewayIcon();
                 $this->init_form_fields();
                 $this->init_settings();
                 $this->title = $this->get_option('title');
@@ -160,12 +168,21 @@
             public function init_gateway()
             {
                 $this->id = 'wc_knet';
-                $this->icon = plugins_url('assets/knet-logo.png', __FILE__);
+                $this->icon = $this->getGatewayIcon();
                 $this->method_title = __('KNET', 'wc-knet');
                 $this->method_description = __('integration with KNET php raw.', 'woocommerce');
                 $this->has_fields = true;
             }
-            
+            /**
+            * @since 2.11.0
+            */
+            private function getGatewayIcon(){
+                   
+                    $this->icon = plugins_url($this->upload_dir.'knet-logo.png', __FILE__);
+                    if(isset($this->logo) && file_exists(plugin_dir_path( __FILE__ ).$this->upload_dir.$this->logo)){
+                        $this->icon = plugins_url($this->upload_dir.$this->logo, __FILE__) ;
+                    } 
+                }
             /**
              * Define Form Option fields
              * - Options for payment like 'title', 'description', 'tranportal_id', 'password', 'resource_key'
@@ -217,6 +234,13 @@
                         'type' => 'textarea',
                         'default' => ''
                     ),
+                    'logo' => array(
+                            'title'       => __( 'Payment gateway icon', 'woocommerce-custom-gateway' ),
+                            'type'        => 'file',
+                            'desc_tip'    => false,
+                            'description' => sprintf('<img src="%s" alt="%s" title="%s"  width="50"/>', $this->icon, __( 'Please upload the icon For Payment.', 'wc-cbk' ), __( 'Please upload the icon For Payment.', 'wc-cbk' )),
+                            'default'     => $this->icon,
+                        ),
                     'complete_order_status' => array(
                         'title' => __('Complete Order Status', 'wc_visa'),
                         'description' => __('The state to which the request is transferred upon successful', 'wc_visa'),
@@ -282,7 +306,40 @@
                 
                 );
             }
+            /**
+            * @since 2.11.0
+            */
+            public function process_admin_options() {
+                $this->upload_key_files();
+                $saved = parent::process_admin_options();
+                return $saved;
+            }
+            /**
+            * @since 2.11.0
+            */
+            private function upload_key_files() {
+        
+                $file = $_FILES['woocommerce_'.$this->id.'_logo'] ?? null;
             
+                if(!empty($file) && $file['name'] != ''){
+                    $upload_dir = plugin_dir_path( __FILE__ ).$this->upload_dir;
+                    if (!empty($upload_dir) ) {
+                        $user_dirname = $upload_dir;
+                        if (!file_exists( $user_dirname ) ) {
+                            wp_mkdir_p( $user_dirname );
+                        }
+                        $filename = wp_unique_filename( $user_dirname, str_replace([' '],"_",$file['name']));
+                        if(move_uploaded_file($file['tmp_name'], $user_dirname .DIRECTORY_SEPARATOR. $filename)){
+                            $_POST['woocommerce_'.$this->id.'_logo'] = $filename;
+                            if($this->logo !== 'knet-logo.png'){
+                                @unlink($user_dirname .DIRECTORY_SEPARATOR .$this->logo);
+                            }
+                        }
+                    }
+                }else{
+                   $_POST['woocommerce_'.$this->id.'_logo'] = $this->logo; 
+                }
+            }
             /**
              * Admin Panel Options
              * - Options for bits like 'title', 'description', 'alias'
@@ -390,7 +447,8 @@
                 
                 $get_billing_first_name = $order->get_billing_first_name();
                 $this->name = (!empty($get_billing_first_name)) ? trim($get_billing_first_name) : (($user_id && $user_info) ? trim($user_info->user_login) : "");
-		$this->name = (!preg_match('/[^A-Za-z0-9]/', $this->name))? $this->name : "";
+                $this->name = (!preg_match('/[^A-Za-z0-9]/', $this->name))? $this->name : "";
+                
                 $billing_email = $order->get_billing_email();
                 $this->email = (!empty($billing_email)) ? $billing_email : (($user_id && $user_info) ? $user_info->user_email : "");
                 
