@@ -5,10 +5,8 @@ defined( 'ABSPATH' ) || exit;
  * Export data to MS Excel. PHP XLSX generator
  * Author: sergey.shuchkin@gmail.com
  */
-if(class_exists("SimpleXLSXGen")){
-    return;
-}
-class SimpleXLSXGen {
+if(!class_exists("SimpleXLSXGen")){
+    class SimpleXLSXGen {
 
     public $curSheet;
     protected $defaultFont;
@@ -666,4 +664,5 @@ class SimpleXLSXGen {
         // but we use fast version
         return str_replace( ['&', '<', '>', "\x00","\x03","\x0B"], ['&amp;', '&lt;', '&gt;', '', '', ''], $str );
     }
+}
 }

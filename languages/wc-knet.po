@@ -1,0 +1,341 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wc-knet 2.11.0\n"
+"POT-Creation-Date: 2023-10-22 12:30+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
+
+#: index.php:172 index.php:229 index.php:349 index.php:350
+msgid "KNET"
+msgstr ""
+
+#: index.php:173
+msgid "integration with KNET php raw."
+msgstr ""
+
+#: index.php:194
+msgid "Enable/Disable"
+msgstr ""
+
+#: index.php:196
+msgid "Enable KNET Payment"
+msgstr ""
+
+#: index.php:200
+msgid "Test mode"
+msgstr ""
+
+#: index.php:201
+msgid "Enable Test Mode"
+msgstr ""
+
+#: index.php:203
+msgid ""
+"Place the payment gateway in test mode using test. only this user roles "
+"[Shop manager,Administrator] can test payment"
+msgstr ""
+
+#: index.php:208
+msgid "KNET REDIRECT page"
+msgstr ""
+
+#: index.php:209
+msgid "Enable KNET REDIRECT page"
+msgstr ""
+
+#: index.php:211
+msgid ""
+"If you were a subscriber to K-Net after 4/9/2023 the date on which this "
+"feature was activated"
+msgstr ""
+
+#: index.php:217
+msgid "KFAST"
+msgstr ""
+
+#: index.php:218
+msgid "Enable KFAST"
+msgstr ""
+
+#: index.php:220
+msgid ""
+"KFAST is a new feature, affiliated with KNET Payment Gateway, by which the "
+"customer can save their card(s) details, enabling them to carry out any "
+"future transactions with the same merchant, in a speedy manner, by only "
+"having to enter their PIN when prompted."
+msgstr ""
+
+#: index.php:226
+msgid "Title"
+msgstr ""
+
+#: index.php:228
+msgid "This controls the title which the user sees during checkout."
+msgstr ""
+
+#: index.php:233
+msgid "Description"
+msgstr ""
+
+#: index.php:238
+msgid "Payment gateway icon"
+msgstr ""
+
+#: index.php:241
+msgid "Please upload the icon For Payment."
+msgstr ""
+
+#: index.php:245
+msgid "Complete Order Status"
+msgstr ""
+
+#: index.php:246
+msgid "The state to which the request is transferred upon successful"
+msgstr ""
+
+#: index.php:252
+msgid "Pending Payment Order Status"
+msgstr ""
+
+#: index.php:253
+msgid ""
+"The state to which the application is transferred when moving to the payment "
+"gateway"
+msgstr ""
+
+#: index.php:260
+msgid "Currency exchange rate "
+msgstr ""
+
+#: index.php:263
+msgid ""
+"It is the rate of multiplying the currency account in the event that the "
+"base currency of the store is not the Kuwaiti dinar"
+msgstr ""
+
+#: index.php:263
+msgid "KWD = exchange rate * amount(USD)"
+msgstr ""
+
+#: index.php:268
+msgid "Payment commission"
+msgstr ""
+
+#: index.php:271
+msgid ""
+"Charge the transfer commission to the customer. If you want to bear it, "
+"leave a zero value"
+msgstr ""
+
+#: index.php:276
+msgid "Tranportal Id"
+msgstr ""
+
+#: index.php:278 index.php:284
+msgid "Necessary data requested from the bank "
+msgstr ""
+
+#: index.php:282
+msgid "Transportal Password"
+msgstr ""
+
+#: index.php:289
+msgid "Terminal Resource Key"
+msgstr ""
+
+#: index.php:291
+msgid "Necessary data requested from the bank"
+msgstr ""
+
+#: index.php:296
+msgid "Language"
+msgstr ""
+
+#: index.php:298
+msgid "payment page lang"
+msgstr ""
+
+#: index.php:301
+msgid "Arabic"
+msgstr ""
+
+#: index.php:302
+msgid "English"
+msgstr ""
+
+#: index.php:374 index.php:523
+msgid "Order not found"
+msgstr ""
+
+#: index.php:385
+msgid "Awaiting cheque payment"
+msgstr ""
+
+#: index.php:397
+msgid "Payment error:"
+msgstr ""
+
+#: index.php:397
+msgid "Knet can't get data"
+msgstr ""
+
+#: index.php:532 index.php:837 index.php:1220 index.php:1266
+#: wc_knet_payment_trans_grid.php:108 wc_knet_payment_trans_grid.php:109
+#: wc_knet_payment_trans_grid.php:171
+msgid "Result"
+msgstr ""
+
+#: index.php:533 index.php:838 index.php:1222 index.php:1268
+#: wc_knet_payment_trans_grid.php:116 wc_knet_payment_trans_grid.php:117
+#: wc_knet_payment_trans_grid.php:173
+msgid "Payment id"
+msgstr ""
+
+#: index.php:534
+msgid "track id"
+msgstr ""
+
+#: index.php:535 index.php:839 index.php:1224 index.php:1270
+#: wc_knet_payment_trans_grid.php:124 wc_knet_payment_trans_grid.php:125
+#: wc_knet_payment_trans_grid.php:175
+msgid "Transaction id"
+msgstr ""
+
+#: index.php:536 index.php:1225 index.php:1271
+#: wc_knet_payment_trans_grid.php:176
+msgid "Reference id"
+msgstr ""
+
+#: index.php:554
+msgid "Error"
+msgstr ""
+
+#: index.php:555
+msgid "Error Message"
+msgstr ""
+
+#: index.php:749
+msgid "Test Mode"
+msgstr ""
+
+#: index.php:760
+msgid "(+) transfer fee"
+msgstr ""
+
+#: index.php:827
+msgid "Knet details"
+msgstr ""
+
+#: index.php:840 index.php:1223 index.php:1269
+#: wc_knet_payment_trans_grid.php:120 wc_knet_payment_trans_grid.php:121
+#: wc_knet_payment_trans_grid.php:174
+msgid "Tracking id"
+msgstr ""
+
+#: index.php:841 index.php:1221 index.php:1267
+#: wc_knet_payment_trans_grid.php:112 wc_knet_payment_trans_grid.php:172
+msgid "Amount"
+msgstr ""
+
+#: index.php:842 wc_knet_payment_trans_grid.php:128
+#: wc_knet_payment_trans_grid.php:129
+msgid "Refrance id"
+msgstr ""
+
+#: index.php:843 index.php:1226 index.php:1272
+#: wc_knet_payment_trans_grid.php:132 wc_knet_payment_trans_grid.php:133
+#: wc_knet_payment_trans_grid.php:177
+msgid "Created at"
+msgstr ""
+
+#: index.php:864
+msgid "Thank you. Your order has been"
+msgstr ""
+
+#: index.php:880 index.php:1215 index.php:1261
+#: wc_knet_payment_trans_grid.php:95 wc_knet_payment_trans_grid.php:96
+#: wc_knet_payment_trans_grid.php:166
+msgid "Order"
+msgstr ""
+
+#: index.php:1183
+msgid "no data send form KNET"
+msgstr ""
+
+#: index.php:1197
+msgid "Payment id is required"
+msgstr ""
+
+#: index.php:1216 index.php:1262 wc_knet_payment_trans_grid.php:167
+#: wc_knet_payment_trans_grid.php:184
+msgid "Customer Name"
+msgstr ""
+
+#: index.php:1217 index.php:1263 wc_knet_payment_trans_grid.php:168
+#: wc_knet_payment_trans_grid.php:185
+msgid "Customer Email"
+msgstr ""
+
+#: index.php:1218 index.php:1264 wc_knet_payment_trans_grid.php:169
+#: wc_knet_payment_trans_grid.php:186
+msgid "Customer Mobile"
+msgstr ""
+
+#: index.php:1219 index.php:1265 wc_knet_payment_trans_grid.php:100
+#: wc_knet_payment_trans_grid.php:102 wc_knet_payment_trans_grid.php:170
+msgid "Status"
+msgstr ""
+
+#: index.php:1319
+msgid "currency must be KWD when using this knet payment"
+msgstr ""
+
+#: index.php:1335
+msgid ""
+"The KFAST feature may not work with all customers because you allow non-"
+"customers to make payments"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:16 wc_knet_payment_trans_grid.php:17
+msgid "WC_Knet_List"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:103
+msgid "Fail"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:104
+msgid "Success"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:113
+msgid "amount"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:137
+msgid "Reset"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:139
+msgid "Export excel"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:140
+msgid "Export csv"
+msgstr ""
+
+#: wc_knet_payment_trans_grid.php:328 wc_knet_payment_trans_grid.php:329
+#: wc_knet_payment_trans_grid.php:345
+msgid "Knet transactions"
+msgstr ""

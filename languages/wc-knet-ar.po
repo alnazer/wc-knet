@@ -1,0 +1,359 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: wc-knet 2.11.0\n"
+"POT-Creation-Date: 2023-10-22 12:30+0300\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
+"X-Generator: Poedit 3.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: .git\n"
+
+#: index.php:172 index.php:229 index.php:349 index.php:350
+msgid "KNET"
+msgstr "كي نت"
+
+#: index.php:173
+msgid "integration with KNET php raw."
+msgstr "التكامل مع KNET php الخام."
+
+#: index.php:194
+msgid "Enable/Disable"
+msgstr "تمكين / تعطيل"
+
+#: index.php:196
+msgid "Enable KNET Payment"
+msgstr "تمكين الدفع عبر كي نت"
+
+#: index.php:200
+msgid "Test mode"
+msgstr "النسخة التجريبية"
+
+#: index.php:201
+msgid "Enable Test Mode"
+msgstr "تفعيل النسخة التجريبية"
+
+#: index.php:203
+msgid ""
+"Place the payment gateway in test mode using test. only this user roles "
+"[Shop manager,Administrator] can test payment"
+msgstr ""
+"ضع بوابة الدفع في وضع الاختبار. يمكن فقط لأدوار هذه [مدير المتجر، المسؤول] "
+"اختبار الدفع"
+
+#: index.php:208
+msgid "KNET REDIRECT page"
+msgstr "خاصية REDIRECT"
+
+#: index.php:209
+msgid "Enable KNET REDIRECT page"
+msgstr "تمكين طباعة REDIRECT في RESPOMSE URL"
+
+#: index.php:211
+msgid ""
+"If you were a subscriber to K-Net after 4/9/2023 the date on which this "
+"feature was activated"
+msgstr "اذا كنت مشترك في الكي نت بعد 9/4/2023 تاريخ تفعيل هذه الخاصية"
+
+#: index.php:217
+msgid "KFAST"
+msgstr "KFAST"
+
+#: index.php:218
+msgid "Enable KFAST"
+msgstr "تفعيل  KFAST"
+
+#: index.php:220
+msgid ""
+"KFAST is a new feature, affiliated with KNET Payment Gateway, by which the "
+"customer can save their card(s) details, enabling them to carry out any "
+"future transactions with the same merchant, in a speedy manner, by only "
+"having to enter their PIN when prompted."
+msgstr ""
+"KFAST هي ميزة جديدة تابعة لبوابة الدفع KNET، والتي من خلالها يمكن للعميل حفظ "
+"تفاصيل بطاقته (بطاقاته)، مما يمكنه من تنفيذ أي معاملات مستقبلية مع نفس "
+"التاجر، بطريقة سريعة، بمجرد إدخال رقم التعريف الشخصي (PIN) الخاص به. عندما "
+"يُطلب منك ذلك."
+
+#: index.php:226
+msgid "Title"
+msgstr "العنوان"
+
+#: index.php:228
+msgid "This controls the title which the user sees during checkout."
+msgstr "العنوان الذي يراه المستخدم أثناء إتمام الطلبية."
+
+#: index.php:233
+msgid "Description"
+msgstr "الوصف"
+
+#: index.php:238
+msgid "Payment gateway icon"
+msgstr "الشعار"
+
+#: index.php:241
+msgid "Please upload the icon For Payment."
+msgstr "الرجاء اختبار ملف الشعار."
+
+#: index.php:245
+msgid "Complete Order Status"
+msgstr "حالة الطلب في حالة نجاح عملية الدفع"
+
+#: index.php:246
+msgid "The state to which the request is transferred upon successful"
+msgstr "الحالة  التي يتم تحديث  الطلب بها  عند نجاحه"
+
+#: index.php:252
+msgid "Pending Payment Order Status"
+msgstr "حالة الطلب في حالة الشروع في اجراء  عملية الدفع"
+
+#: index.php:253
+msgid ""
+"The state to which the application is transferred when moving to the payment "
+"gateway"
+msgstr "الحالة  التي يتم نقل الطلب إليها عند الانتقال إلى بوابة الدفع"
+
+#: index.php:260
+msgid "Currency exchange rate "
+msgstr "سعر صرف العملة "
+
+#: index.php:263
+msgid ""
+"It is the rate of multiplying the currency account in the event that the "
+"base currency of the store is not the Kuwaiti dinar"
+msgstr ""
+"هو معدل ضرب حساب العملة في حالة أن العملة الأساسية للمتجر ليست الدينار "
+"الكويتي"
+
+#: index.php:263
+msgid "KWD = exchange rate * amount(USD)"
+msgstr "KWD = exchange rate * amount(USD)"
+
+#: index.php:268
+msgid "Payment commission"
+msgstr "عمولة بوابة الدفع"
+
+#: index.php:271
+msgid ""
+"Charge the transfer commission to the customer. If you want to bear it, "
+"leave a zero value"
+msgstr "تحميل عمولة التحويل للعميل. إذا كنت تريد أن تتحملها، اترك قيمة صفر"
+
+#: index.php:276
+msgid "Tranportal Id"
+msgstr "Tranportal Id"
+
+#: index.php:278 index.php:284
+msgid "Necessary data requested from the bank "
+msgstr "البيانات اللازمة المطلوبة من البنك "
+
+#: index.php:282
+msgid "Transportal Password"
+msgstr "كلمة مرور Transportal"
+
+#: index.php:289
+msgid "Terminal Resource Key"
+msgstr "Terminal Resource Key"
+
+#: index.php:291
+msgid "Necessary data requested from the bank"
+msgstr "البيانات اللازمة المطلوبة من البنك"
+
+#: index.php:296
+msgid "Language"
+msgstr "اللغة"
+
+#: index.php:298
+msgid "payment page lang"
+msgstr "لغة صفحة الكي نت"
+
+#: index.php:301
+msgid "Arabic"
+msgstr "العربية"
+
+#: index.php:302
+msgid "English"
+msgstr "الانجليزية"
+
+#: index.php:374 index.php:523
+msgid "Order not found"
+msgstr "الطلب غير موجود"
+
+#: index.php:385
+msgid "Awaiting cheque payment"
+msgstr "في انتظار الدفع"
+
+#: index.php:397
+msgid "Payment error:"
+msgstr "خطا في عملية الدفع :"
+
+#: index.php:397
+msgid "Knet can't get data"
+msgstr "غير قادر علي جلب البيانات من بوابة الكي نت"
+
+#: index.php:532 index.php:837 index.php:1220 index.php:1266
+#: wc_knet_payment_trans_grid.php:108 wc_knet_payment_trans_grid.php:109
+#: wc_knet_payment_trans_grid.php:171
+msgid "Result"
+msgstr "النتيجية"
+
+#: index.php:533 index.php:838 index.php:1222 index.php:1268
+#: wc_knet_payment_trans_grid.php:116 wc_knet_payment_trans_grid.php:117
+#: wc_knet_payment_trans_grid.php:173
+msgid "Payment id"
+msgstr "معرف الدفع (Payment id)"
+
+#: index.php:534
+msgid "track id"
+msgstr "معرف التتبع (track id)"
+
+#: index.php:535 index.php:839 index.php:1224 index.php:1270
+#: wc_knet_payment_trans_grid.php:124 wc_knet_payment_trans_grid.php:125
+#: wc_knet_payment_trans_grid.php:175
+msgid "Transaction id"
+msgstr "معرف عملية الدفع (Transaction id)"
+
+#: index.php:536 index.php:1225 index.php:1271
+#: wc_knet_payment_trans_grid.php:176
+msgid "Reference id"
+msgstr "الرقم المرجعي (Reference id)"
+
+#: index.php:554
+msgid "Error"
+msgstr "خطا"
+
+#: index.php:555
+msgid "Error Message"
+msgstr "رسالة الخطا"
+
+#: index.php:749
+msgid "Test Mode"
+msgstr "النسخة التجريبية"
+
+#: index.php:760
+msgid "(+) transfer fee"
+msgstr "(+) عمولة الدفع"
+
+#: index.php:827
+msgid "Knet details"
+msgstr "بيانات الدفع( الكي نت)"
+
+#: index.php:840 index.php:1223 index.php:1269
+#: wc_knet_payment_trans_grid.php:120 wc_knet_payment_trans_grid.php:121
+#: wc_knet_payment_trans_grid.php:174
+msgid "Tracking id"
+msgstr "معرف التتبع (track id)"
+
+#: index.php:841 index.php:1221 index.php:1267
+#: wc_knet_payment_trans_grid.php:112 wc_knet_payment_trans_grid.php:172
+msgid "Amount"
+msgstr "المبلغ"
+
+#: index.php:842 wc_knet_payment_trans_grid.php:128
+#: wc_knet_payment_trans_grid.php:129
+msgid "Refrance id"
+msgstr "الرقم المرجعي (Refrance id)"
+
+#: index.php:843 index.php:1226 index.php:1272
+#: wc_knet_payment_trans_grid.php:132 wc_knet_payment_trans_grid.php:133
+#: wc_knet_payment_trans_grid.php:177
+msgid "Created at"
+msgstr "أنشئ بتاريخ"
+
+#: index.php:864
+msgid "Thank you. Your order has been"
+msgstr "شكرًا لك.  طلبك الان"
+
+#: index.php:880 index.php:1215 index.php:1261
+#: wc_knet_payment_trans_grid.php:95 wc_knet_payment_trans_grid.php:96
+#: wc_knet_payment_trans_grid.php:166
+msgid "Order"
+msgstr "طلب"
+
+#: index.php:1183
+msgid "no data send form KNET"
+msgstr "لم يتم استقبال أي بيانات من الكي نت"
+
+#: index.php:1197
+msgid "Payment id is required"
+msgstr "معرف عملية الدفع مطلوب"
+
+#: index.php:1216 index.php:1262 wc_knet_payment_trans_grid.php:167
+#: wc_knet_payment_trans_grid.php:184
+msgid "Customer Name"
+msgstr "اسم العميل"
+
+#: index.php:1217 index.php:1263 wc_knet_payment_trans_grid.php:168
+#: wc_knet_payment_trans_grid.php:185
+msgid "Customer Email"
+msgstr "بريد العميل"
+
+#: index.php:1218 index.php:1264 wc_knet_payment_trans_grid.php:169
+#: wc_knet_payment_trans_grid.php:186
+msgid "Customer Mobile"
+msgstr "هاتف البريد"
+
+#: index.php:1219 index.php:1265 wc_knet_payment_trans_grid.php:100
+#: wc_knet_payment_trans_grid.php:102 wc_knet_payment_trans_grid.php:170
+msgid "Status"
+msgstr "الحالة"
+
+#: index.php:1319
+msgid "currency must be KWD when using this knet payment"
+msgstr ""
+"يجب أن تكون العملة دينارًا كويتيًا عند استخدام خدمة الدفع عبر خدمة الكي نت"
+
+#: index.php:1335
+msgid ""
+"The KFAST feature may not work with all customers because you allow non-"
+"customers to make payments"
+msgstr ""
+"قد لا تعمل ميزة KFAST مع جميع العملاء لأنك تسمح لغير العملاء بإجراء الدفعات"
+
+#: wc_knet_payment_trans_grid.php:16 wc_knet_payment_trans_grid.php:17
+msgid "WC_Knet_List"
+msgstr "قائمة الطلبات"
+
+#: wc_knet_payment_trans_grid.php:103
+msgid "Fail"
+msgstr "فاشلة"
+
+#: wc_knet_payment_trans_grid.php:104
+msgid "Success"
+msgstr "ناجحة"
+
+#: wc_knet_payment_trans_grid.php:113
+msgid "amount"
+msgstr "المبلغ"
+
+#: wc_knet_payment_trans_grid.php:137
+msgid "Reset"
+msgstr "إعادة تهيئة"
+
+#: wc_knet_payment_trans_grid.php:139
+msgid "Export excel"
+msgstr "تصدير اكسل"
+
+#: wc_knet_payment_trans_grid.php:140
+msgid "Export csv"
+msgstr "تصدير csv"
+
+#: wc_knet_payment_trans_grid.php:328 wc_knet_payment_trans_grid.php:329
+#: wc_knet_payment_trans_grid.php:345
+msgid "Knet transactions"
+msgstr "سجل عمليات الكي نت"
+
+#~ msgid ""
+#~ "تم اضافة هذة الخاصية نظراً لتحديث الكي نت الجديد للمشتركين ب 4/9/2023 اذا "
+#~ "لم يطلب منك الكي نت تفعبل خاصية اعادة التوجية لا تقم بتفعيلها"
+#~ msgstr ""
+#~ "تم اضافة هذة الخاصية نظراً لتحديث الكي نت الجديد للمشتركين ب 4/9/2023 اذا "
+#~ "لم يطلب منك الكي نت تفعبل خاصية اعادة التوجية لا تقم بتفعيلها"
