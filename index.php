@@ -830,7 +830,7 @@
                     "{amount}" => ($knet_detials->amount) ? $knet_detials->amount : "---",
                     "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
                     "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
-                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y", strtotime($knet_detials->created_at)) : "---",
+                    "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y H:i:s A", strtotime($knet_detials->created_at)) : "---",
                     "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
                 ];
                 $replace_lang = [
