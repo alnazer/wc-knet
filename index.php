@@ -894,7 +894,7 @@
             private function get_order_in_recived_page($page_id, $return_order = false)
             {
                 global $wp;
-                if (is_order_received_page() && get_the_ID() === $page_id) {
+                 if (get_the_ID() === $page_id && !empty($wp->query_vars['order-received'])) {
                     $order_id = apply_filters('woocommerce_thankyou_order_id', absint($wp->query_vars['order-received']));
                     $order_key = apply_filters('woocommerce_thankyou_order_key', empty($_GET['key']) ? '' : wc_clean($_GET['key']));
                     if ($order_id > 0) {
