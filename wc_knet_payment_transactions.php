@@ -59,7 +59,7 @@ if(!function_exists( "alnazer_wc_handel_knet_create_new_transaction" )){
                         'result' => $transation_data["result"],
                         'amount'=>$transation_data["amount"],
                         'info' => json_encode($transation_data),
-                        'created_at' =>  date( 'Y-m-d H:i:s', current_time( 'timestamp', 0 )),
+                        'created_at' =>  wp_date( 'Y-m-d H:i:s'),
                     ]
                 );
             }
