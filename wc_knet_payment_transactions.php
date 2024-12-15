@@ -83,7 +83,7 @@ if(!function_exists( "alnazer_wc_get_transaction_by_order_id" )){
     function alnazer_wc_get_transaction_by_order_id($order_id){
         global $wpdb;
         $table_name = $wpdb->prefix.WC_PAYMENT_KNET_TABLE;
-        return $wpdb->get_row("SELECT * FROM `$table_name` WHERE `order_id`='$order_id' ORDER BY `id` DESC  LIMIT 1");
+        return $wpdb->get_row($wpdb->prepare("SELECT * FROM `$table_name` WHERE `order_id`=%d ORDER BY `id` DESC  LIMIT 1",[$order_id]));
     }
 }
 
