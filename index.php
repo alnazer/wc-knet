@@ -534,6 +534,8 @@
                     $knetInformation .= __('track id', 'wc-knet') . "         : $trackid\n";
                     $knetInformation .= __('Transaction id', 'wc-knet') . "   : $tranid\n";
                     $knetInformation .= __('Reference id', 'wc-knet') . "      : $ref\n";
+			// insert transation
+                    do_action("alnazer_wc_knet_create_new_transaction", $order, $transation_data);
                     if (isset($status) && $status == "success") {
                         switch ($result) {
                             case 'CAPTURED':
@@ -556,8 +558,7 @@
                         $order->update_status('failed');
                     }
                     $order->add_order_note($knetInformation);
-                    // insert transation
-                    do_action("alnazer_wc_knet_create_new_transaction", $order, $transation_data);
+                   
                     return $this->get_return_url($order);
                 }
                 return  "";
