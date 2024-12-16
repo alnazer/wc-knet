@@ -832,7 +832,7 @@
                     "{tran_id}" => ($knet_detials->tran_id) ? $knet_detials->tran_id : "---",
                     "{ref_id}" => ($knet_detials->ref_id) ? $knet_detials->ref_id : "---",
                     "{created_at}" => ($knet_detials->created_at) ? wp_date("F j, Y H:i:s A", strtotime($knet_detials->created_at)) : "---",
-                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($knet_detials->result), $knet_detials->result),
                 ];
                 $replace_lang = [
                     "_lang(result)" => __("Result", "wc-knet"),
@@ -842,7 +842,7 @@
                     "_lang(amount)" => __("Amount", "wc-knet"),
                     "_lang(ref_id)" => __("Refrance id", "wc-knet"),
                     "_lang(created_at)" => __('Created at', "wc-knet"),
-                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($order->get_status()), $knet_detials->result),
+                    "{result}" => sprintf("<b><span style=\"color:%s\">%s</span></b>", $this->get_status_color($knet_detials->result), $knet_detials->result),
                 ];
                 $replace = array_merge($replace, $replace_lang);
                 
@@ -933,6 +933,8 @@
                         return "#04c1fb";
                     case "completed":
                         return "green";
+			case "CAPTURED":
+			 return "green";
                     default:
                         return "#fb0404";
                 }
